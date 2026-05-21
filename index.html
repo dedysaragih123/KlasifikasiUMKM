@@ -1,0 +1,3937 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UMKM Liquidity Risk Classifier · STI ITB 2025</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+/* ============================================================
+   UMKM Liquidity Risk Classifier — Design System
+   ============================================================ */
+
+:root {
+  /* Palette */
+  --hr: #E74C3C;
+  --hr-bg: #FDEAEA;
+  --safe: #27AE60;
+  --safe-bg: #EAFAF1;
+  --warn: #F39C12;
+  --warn-bg: #FEF5E7;
+  --primary: #2C3E50;
+  --accent: #3498DB;
+  --macro: #E67E22;
+  --temporal: #3498DB;
+  --gold: #F1C40F;
+
+  /* Neutrals */
+  --ink: #1B2733;
+  --ink-2: #34495E;
+  --ink-3: #5D6D7E;
+  --ink-4: #95A5A6;
+  --line: #ECF0F1;
+  --line-2: #E5E9EC;
+  --surface: #FFFFFF;
+  --canvas: #F4F6F8;
+  --sidebar: #FAFBFC;
+
+  /* Type */
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Menlo', monospace;
+
+  /* Radii */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 20px;
+
+  /* Shadow */
+  --sh-1: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
+  --sh-2: 0 2px 8px rgba(16, 24, 40, 0.06), 0 4px 16px rgba(16, 24, 40, 0.04);
+  --sh-3: 0 8px 24px rgba(16, 24, 40, 0.08), 0 2px 6px rgba(16, 24, 40, 0.04);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font);
+  background: var(--canvas);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root { min-height: 100vh; }
+
+/* ===== Layout shell ===== */
+.app {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  background: var(--sidebar);
+  border-right: 1px solid var(--line);
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 16px;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+.brand-name { font-weight: 700; font-size: 13.5px; color: var(--ink); }
+.brand-sub { font-size: 11px; color: var(--ink-4); }
+
+.sidebar-section-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin: 8px 4px 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 11px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 500;
+  transition: background .15s, color .15s;
+  user-select: none;
+}
+.nav-item:hover { background: rgba(52, 152, 219, 0.06); color: var(--ink); }
+.nav-item.active {
+  background: var(--primary);
+  color: white;
+}
+.nav-item.active .nav-icon { color: white; }
+.nav-icon {
+  width: 18px; height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-3);
+  font-size: 15px;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: var(--line);
+  margin: 14px 0;
+}
+
+.model-status {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+  font-size: 12px;
+}
+.model-status-title {
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.model-status-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-3);
+  padding: 3px 0;
+  font-size: 11.5px;
+}
+.dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--safe);
+  flex-shrink: 0;
+}
+.dot.err { background: var(--hr); }
+.dot.warn { background: var(--warn); }
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  color: var(--ink-4);
+  line-height: 1.5;
+}
+.sidebar-footer strong { color: var(--ink-3); font-weight: 600; }
+
+/* ===== Content area ===== */
+.content {
+  padding: 28px 36px 64px;
+  max-width: 1400px;
+  width: 100%;
+}
+
+.page-header { margin-bottom: 24px; }
+.page-eyebrow {
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.page-title {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+.page-sub {
+  color: var(--ink-3);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ===== Cards ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  box-shadow: var(--sh-1);
+}
+.card.tight { padding: 16px; }
+.card.flush { padding: 0; overflow: hidden; }
+
+.card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-sub {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin: 0 0 14px;
+}
+
+/* ===== Metric ===== */
+.metric {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.metric .accent-bar {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--primary);
+}
+.metric.hr .accent-bar { background: var(--hr); }
+.metric.safe .accent-bar { background: var(--safe); }
+.metric.warn .accent-bar { background: var(--warn); }
+
+.metric-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
+}
+.metric-value {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.metric-delta {
+  font-size: 12px;
+  margin-top: 6px;
+  color: var(--ink-3);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.metric-delta.up { color: var(--safe); }
+.metric-delta.down { color: var(--hr); }
+.metric-delta.warn { color: var(--warn); }
+
+/* ===== Badge ===== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.badge-risk { background: var(--hr-bg); color: var(--hr); }
+.badge-safe { background: var(--safe-bg); color: var(--safe); }
+.badge-warn { background: var(--warn-bg); color: var(--warn); }
+.badge-neutral { background: var(--line); color: var(--ink-2); }
+.badge .dotmark { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* ===== Buttons ===== */
+.btn {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background .15s, transform .05s, box-shadow .15s;
+  white-space: nowrap;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+.btn-primary:hover { background: #1F2D3D; }
+.btn-primary:disabled { background: var(--ink-4); cursor: not-allowed; }
+.btn-accent {
+  background: var(--accent);
+  color: white;
+}
+.btn-accent:hover { background: #2580BE; }
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-2);
+  border-color: var(--line-2);
+}
+.btn-ghost:hover { background: var(--canvas); }
+.btn-block { width: 100%; justify-content: center; padding: 11px 16px; font-size: 13.5px; }
+
+/* ===== Inputs ===== */
+.field-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+  display: block;
+}
+.field-hint {
+  font-size: 11.5px;
+  color: var(--ink-4);
+  margin-top: 4px;
+}
+.input, .select {
+  width: 100%;
+  font-family: inherit;
+  font-size: 13px;
+  padding: 9px 11px;
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  background: white;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.input:focus, .select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.12);
+}
+
+/* ===== Radio cards ===== */
+.radio-group { display: flex; flex-direction: column; gap: 8px; }
+.radio-card {
+  border: 1.5px solid var(--line-2);
+  border-radius: 10px;
+  padding: 11px 13px;
+  cursor: pointer;
+  background: white;
+  transition: border-color .15s, background .15s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.radio-card:hover { border-color: var(--accent); }
+.radio-card.selected {
+  border-color: var(--accent);
+  background: rgba(52, 152, 219, 0.05);
+}
+.radio-dot {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line-2);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.radio-card.selected .radio-dot { border-color: var(--accent); }
+.radio-card.selected .radio-dot::after {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.radio-title { font-weight: 600; font-size: 13px; color: var(--ink); }
+.radio-caption { font-size: 11.5px; color: var(--ink-3); margin-top: 1px; }
+.radio-body { flex: 1; }
+
+/* ===== File dropzone ===== */
+.dropzone {
+  border: 1.5px dashed var(--line-2);
+  border-radius: 10px;
+  padding: 22px 16px;
+  text-align: center;
+  background: var(--canvas);
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.dropzone:hover { border-color: var(--accent); background: rgba(52, 152, 219, 0.04); }
+.dropzone.has-file {
+  border-style: solid;
+  border-color: var(--safe);
+  background: var(--safe-bg);
+}
+.dropzone.has-error {
+  border-color: var(--hr);
+  background: var(--hr-bg);
+}
+.dropzone.drag-over {
+  border-color: var(--accent);
+  border-style: solid;
+  background: rgba(52, 152, 219, 0.10);
+  transform: scale(1.005);
+}
+.btn-link-danger {
+  background: transparent;
+  border: none;
+  color: var(--hr);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 4px;
+  text-decoration: underline;
+  font-family: inherit;
+}
+.btn-link-danger:hover { color: #B03A2E; }
+.dropzone-icon {
+  font-size: 24px;
+  color: var(--ink-4);
+  margin-bottom: 6px;
+}
+.dropzone.has-file .dropzone-icon { color: var(--safe); }
+.dropzone-title { font-weight: 600; font-size: 13px; color: var(--ink); }
+.dropzone-hint { font-size: 11.5px; color: var(--ink-3); margin-top: 3px; }
+
+/* ===== Tabs ===== */
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 18px;
+}
+.tab {
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color .15s, border-color .15s;
+}
+.tab:hover { color: var(--ink); }
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+/* ===== Slider ===== */
+.slider-wrap { padding: 4px 0 8px; }
+.slider-track-wrap { position: relative; height: 28px; display: flex; align-items: center; }
+.slider {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  outline: none;
+}
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 3px solid white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.slider::-moz-range-thumb {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 3px solid white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.slider-marks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+  margin-top: 4px;
+}
+.slider-value {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--accent);
+  font-size: 14px;
+}
+
+/* ===== Table ===== */
+.table-wrap {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: white;
+}
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+table.data thead th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: var(--canvas);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+table.data tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+  color: var(--ink);
+}
+table.data tbody tr:last-child td { border-bottom: none; }
+table.data tbody tr.row-hr { background: var(--hr-bg); }
+table.data tbody tr.row-safe { background: var(--safe-bg); }
+table.data tbody tr:hover { filter: brightness(0.985); }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* Inline progress bar inside table */
+.prog {
+  display: flex; align-items: center; gap: 8px;
+}
+.prog-track {
+  flex: 1;
+  background: var(--line);
+  height: 6px;
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+  min-width: 80px;
+  max-width: 140px;
+}
+.prog-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent);
+}
+.prog-fill.risk { background: var(--hr); }
+.prog-fill.safe { background: var(--safe); }
+.prog-label {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+  font-weight: 600;
+  min-width: 38px;
+  text-align: right;
+}
+
+/* ===== Alert ===== */
+.alert {
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  font-size: 12.5px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid;
+  line-height: 1.5;
+}
+.alert-info { background: rgba(52, 152, 219, 0.07); border-color: rgba(52, 152, 219, 0.25); color: #1B4F72; }
+.alert-warn { background: var(--warn-bg); border-color: rgba(243, 156, 18, 0.3); color: #7E5109; }
+.alert-error { background: var(--hr-bg); border-color: rgba(231, 76, 60, 0.3); color: #922B21; }
+.alert-success { background: var(--safe-bg); border-color: rgba(39, 174, 96, 0.3); color: #196F3D; }
+.alert-icon { font-size: 16px; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+.alert-title { font-weight: 700; margin-bottom: 2px; }
+
+/* ===== Grids ===== */
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-input { display: grid; grid-template-columns: 360px 1fr; gap: 24px; }
+.grid-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* Landing nav cards */
+.nav-card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.nav-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 22px;
+  cursor: pointer;
+  transition: border-color .2s, box-shadow .2s, transform .1s;
+  position: relative;
+  overflow: hidden;
+}
+.nav-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--sh-2);
+  transform: translateY(-1px);
+}
+.nav-card-icon {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  background: rgba(52, 152, 219, 0.1);
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.nav-card-title { font-size: 16px; font-weight: 700; color: var(--ink); margin: 0 0 4px; }
+.nav-card-desc { font-size: 12.5px; color: var(--ink-3); margin: 0; line-height: 1.55; }
+.nav-card-cta {
+  font-size: 12px; color: var(--accent); font-weight: 600;
+  margin-top: 12px; display: inline-flex; align-items: center; gap: 4px;
+}
+
+/* Pipeline progress */
+.pipeline {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12.5px;
+}
+.pipeline-row {
+  display: flex; align-items: center; gap: 12px;
+}
+.pipeline-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.pipeline-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--primary));
+  transition: width .35s ease;
+}
+.pipeline-label {
+  min-width: 200px;
+  color: var(--ink-2);
+}
+.pipeline-status { font-size: 11.5px; color: var(--ink-4); min-width: 60px; text-align: right; }
+.pipeline-status.done { color: var(--safe); }
+
+/* CLR chart placeholder text */
+.chart-empty {
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(
+    135deg, transparent, transparent 10px,
+    rgba(0,0,0,0.02) 10px, rgba(0,0,0,0.02) 20px
+  );
+  border-radius: 10px;
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+/* Disclaimer footer */
+.disclaimer {
+  margin-top: 32px;
+  padding: 14px 16px;
+  background: white;
+  border: 1px dashed var(--line-2);
+  border-radius: 8px;
+  font-size: 11.5px;
+  color: var(--ink-3);
+  line-height: 1.6;
+}
+.disclaimer strong { color: var(--ink-2); }
+
+/* Detail header */
+.detail-header {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 1fr 1fr;
+  gap: 0;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.detail-header > div {
+  padding: 18px 22px;
+  border-right: 1px solid var(--line);
+}
+.detail-header > div:last-child { border-right: none; }
+.detail-label {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.detail-value-lg { font-size: 22px; font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+.detail-id-name { display: flex; flex-direction: column; gap: 2px; }
+.detail-id-name .small { font-size: 12px; color: var(--ink-3); font-weight: 500; }
+
+.gauge-mini {
+  width: 110px; height: 60px;
+  position: relative;
+  margin: 0 auto;
+}
+
+/* Feature value table */
+.feat-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.feat-table th {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.feat-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.feat-table tr:last-child td { border-bottom: none; }
+.feat-table .extreme { background: rgba(243, 156, 18, 0.08); }
+.feat-bar {
+  height: 5px;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+  min-width: 60px;
+  display: inline-block;
+  width: 80px;
+  vertical-align: middle;
+}
+.feat-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+.tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 10.5px;
+  font-weight: 600;
+  background: var(--line);
+  color: var(--ink-2);
+}
+.tag.lag { background: rgba(52, 152, 219, 0.12); color: var(--accent); }
+.tag.roll { background: rgba(52, 152, 219, 0.12); color: var(--accent); }
+.tag.tren { background: rgba(52, 152, 219, 0.12); color: var(--accent); }
+.tag.makro { background: rgba(230, 126, 34, 0.14); color: var(--macro); }
+.tag.lain { background: rgba(39, 174, 96, 0.14); color: var(--safe); }
+
+/* Stepper for pipeline status */
+.spinner {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  border-top-color: var(--accent);
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Plotly tweaks */
+.js-plotly-plot .modebar { display: none !important; }
+
+/* Toolbar above table */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.toolbar .grow { flex: 1; }
+
+/* Filter chips */
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 10px;
+  border-radius: 14px;
+  background: white;
+  border: 1px solid var(--line-2);
+  font-size: 12px;
+  color: var(--ink-2);
+  cursor: pointer;
+  font-weight: 500;
+}
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+/* Section heading inside page */
+.section-h {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-h .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px;
+  background: var(--primary); color: white;
+  border-radius: 6px;
+  font-size: 11px; font-weight: 700;
+}
+
+/* Two-pane info row */
+.kv {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 12.5px;
+  border-bottom: 1px dashed var(--line);
+}
+.kv:last-child { border-bottom: none; }
+.kv .k { color: var(--ink-3); }
+.kv .v { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* Banner for thesis */
+.thesis-banner {
+  background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+  color: white;
+  border-radius: var(--r-lg);
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.thesis-banner::after {
+  content: '';
+  position: absolute;
+  right: -40px; top: -40px;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(52,152,219,0.3) 0%, transparent 60%);
+  pointer-events: none;
+}
+.thesis-banner h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+.thesis-banner p {
+  margin: 0;
+  opacity: 0.85;
+  font-size: 13.5px;
+  max-width: 720px;
+  line-height: 1.55;
+}
+.thesis-meta {
+  display: flex;
+  gap: 14px;
+  margin-top: 14px;
+  font-size: 11.5px;
+  flex-wrap: wrap;
+}
+.thesis-meta span {
+  background: rgba(255,255,255,0.1);
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+/* Scroll niceness */
+.sidebar::-webkit-scrollbar, .content::-webkit-scrollbar { width: 8px; height: 8px; }
+.sidebar::-webkit-scrollbar-thumb, .content::-webkit-scrollbar-thumb {
+  background: var(--line-2); border-radius: 4px;
+}
+
+/* Empty state for missing prediction */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--ink-3);
+}
+.empty-state-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+.empty-state h3 { font-size: 16px; color: var(--ink); margin: 0 0 6px; }
+.empty-state p { font-size: 13px; margin: 0 0 16px; }
+
+
+/* ============================================================
+   Verdict hero (results page) — single-UMKM report card
+   ============================================================ */
+.verdict-hero {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 28px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 26px 28px;
+  position: relative;
+  overflow: hidden;
+}
+.verdict-hero::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 6px;
+}
+.verdict-hr::before  { background: var(--hr); }
+.verdict-safe::before { background: var(--safe); }
+.verdict-left { min-width: 0; }
+.verdict-right {
+  border-left: 1px dashed var(--line);
+  padding-left: 24px;
+}
+.verdict-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+}
+.verdict-hr .verdict-badge {
+  background: var(--hr-bg);
+  color: var(--hr);
+}
+.verdict-safe .verdict-badge {
+  background: var(--safe-bg);
+  color: var(--safe);
+}
+.verdict-badge .dotmark {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.verdict-headline {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 8px;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  text-wrap: pretty;
+}
+.verdict-headline strong {
+  font-weight: 700;
+}
+.verdict-hr .verdict-headline strong { color: var(--hr); }
+.verdict-safe .verdict-headline strong { color: var(--safe); }
+.verdict-sub {
+  font-size: 13px;
+  color: var(--ink-3);
+  margin: 0 0 18px;
+  line-height: 1.6;
+  max-width: 640px;
+}
+.verdict-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 4px;
+}
+.vstat {
+  background: var(--canvas);
+  border-radius: var(--r-md);
+  padding: 11px 14px;
+}
+.vstat-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.vstat-value {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 2px;
+  letter-spacing: -0.015em;
+  font-variant-numeric: tabular-nums;
+}
+.vstat-hint {
+  font-size: 10.5px;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script>
+// ============================================================
+// Mock data for UMKM Liquidity Risk Classifier prototype
+// ============================================================
+
+window.MOCK = (function () {
+
+  // Threshold τ* per horizon (from thresholds.pkl)
+  const thresholds = {
+    4: 0.42,
+    12: 0.38,
+    24: 0.45,
+  };
+  const q25q75 = {
+    4: { q25: 0.82, q75: 1.45 },
+    12: { q25: 0.78, q75: 1.52 },
+    24: { q25: 0.71, q75: 1.61 },
+  };
+
+  // Performance numbers per horizon (research results)
+  const horizonStats = {
+    4:  { macroF1: 0.591, recallHR: 77.3, model: "Stacking",   modelLong: "Stacking Classifier (LR meta-learner)" },
+    12: { macroF1: 0.561, recallHR: 74.1, model: "SoftVoting", modelLong: "Soft Voting Ensemble (XGB+LGB+ET)" },
+    24: { macroF1: 0.528, recallHR: 69.8, model: "LightGBM",   modelLong: "LightGBM (DART booster)" },
+  };
+
+  // 12 UMKM with realistic-looking predictions
+  // CLR series simulated weekly across 28 weeks
+  function genCLR(seed, baseline, trend, noise, weeks = 28) {
+    // simple seeded random
+    let s = seed;
+    const rand = () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+    const arr = [];
+    for (let i = 0; i < weeks; i++) {
+      const v = baseline + trend * i + (rand() - 0.5) * noise;
+      arr.push(Math.max(0.05, +v.toFixed(3)));
+    }
+    return arr;
+  }
+
+  const umkmList = [
+    { id: "UMKM_001", nama: "Toko Sembako Bu Sri",     sektor: "Retail",       prob: 0.87, clrSeries: genCLR(11, 1.6, -0.04, 0.3), tau4: 0.42 },
+    { id: "UMKM_002", nama: "Warung Makan Pak Joko",   sektor: "F&B",          prob: 0.81, clrSeries: genCLR(22, 1.4, -0.035, 0.28) },
+    { id: "UMKM_003", nama: "Konveksi Citra Busana",   sektor: "Manufaktur",   prob: 0.72, clrSeries: genCLR(33, 1.2, -0.022, 0.25) },
+    { id: "UMKM_004", nama: "Salon Cantika",           sektor: "Jasa",         prob: 0.64, clrSeries: genCLR(44, 1.1, -0.018, 0.22) },
+    { id: "UMKM_005", nama: "Bengkel Motor Jaya",      sektor: "Jasa",         prob: 0.58, clrSeries: genCLR(55, 1.05, -0.012, 0.2)  },
+    { id: "UMKM_006", nama: "Toko Bangunan Maju",      sektor: "Retail",       prob: 0.47, clrSeries: genCLR(66, 1.0, -0.005, 0.18) },
+    { id: "UMKM_007", nama: "Laundry Bersih Wangi",    sektor: "Jasa",         prob: 0.33, clrSeries: genCLR(77, 1.1, 0.004, 0.15) },
+    { id: "UMKM_008", nama: "Kafe Kopi Senja",         sektor: "F&B",          prob: 0.28, clrSeries: genCLR(88, 1.15, 0.006, 0.16) },
+    { id: "UMKM_009", nama: "Toko Buku Aksara",        sektor: "Retail",       prob: 0.22, clrSeries: genCLR(99, 1.2, 0.008, 0.14) },
+    { id: "UMKM_010", nama: "Catering Sehat",          sektor: "F&B",          prob: 0.18, clrSeries: genCLR(110, 1.3, 0.01, 0.14) },
+    { id: "UMKM_011", nama: "Toko Elektronik Surya",   sektor: "Retail",       prob: 0.14, clrSeries: genCLR(121, 1.4, 0.011, 0.12) },
+    { id: "UMKM_012", nama: "Apotek Sehat Selalu",     sektor: "Retail",       prob: 0.09, clrSeries: genCLR(132, 1.55, 0.012, 0.1) },
+  ];
+
+  umkmList.forEach((u) => {
+    u.clrLast = u.clrSeries[u.clrSeries.length - 1];
+    // Slope of last 4 weeks (simple linear regression)
+    const last4 = u.clrSeries.slice(-4);
+    const mean = last4.reduce((a, b) => a + b, 0) / 4;
+    const ms = [0, 1, 2, 3].reduce((acc, i) => acc + (i - 1.5) * (last4[i] - mean), 0);
+    u.slope4 = +(ms / 5).toFixed(3);
+    u.tren = u.slope4 > 0.02 ? "up" : u.slope4 < -0.02 ? "down" : "flat";
+    u.weekLast = "2025-02-24";
+  });
+
+  // Feature definitions used in detail page (top features for H=4 Stacking)
+  const topFeaturesH4 = [
+    { name: "clr_lag1",         imp: 0.182, group: "lag" },
+    { name: "clr_roll4_mean",   imp: 0.146, group: "roll" },
+    { name: "clr_slope4",       imp: 0.118, group: "tren" },
+    { name: "clr_vs_q25",       imp: 0.097, group: "lag" },
+    { name: "clr_roll12_mean",  imp: 0.083, group: "roll" },
+    { name: "clr_delta4",       imp: 0.071, group: "tren" },
+    { name: "macro_inflasi_lag1",imp:0.062, group: "makro" },
+    { name: "clr_x_inflasi",    imp: 0.054, group: "makro" },
+    { name: "clr_pct_vs_peers", imp: 0.048, group: "lain" },
+    { name: "macro_bi_rate_lag1",imp:0.039, group: "makro" },
+  ];
+
+  // Per-UMKM feature values (generated relative to the UMKM's profile)
+  function featureValuesFor(umkm, hz) {
+    const last = umkm.clrLast;
+    const recent = umkm.clrSeries.slice(-4);
+    const mean4 = +(recent.reduce((a, b) => a + b, 0) / 4).toFixed(3);
+    return [
+      { name: "clr_lag1",          value: last, group: "lag",   extreme: last < q25q75[hz].q25 },
+      { name: "clr_roll4_mean",    value: mean4, group: "roll", extreme: mean4 < q25q75[hz].q25 },
+      { name: "clr_slope4",        value: umkm.slope4, group: "tren", extreme: umkm.slope4 < -0.03 },
+      { name: "clr_vs_q25",        value: +(last - q25q75[hz].q25).toFixed(3), group: "lag", extreme: (last - q25q75[hz].q25) < -0.2 },
+      { name: "clr_roll12_mean",   value: +(mean4 + 0.05).toFixed(3), group: "roll", extreme: false },
+      { name: "clr_delta4",        value: +(last - umkm.clrSeries[umkm.clrSeries.length - 5]).toFixed(3), group: "tren", extreme: false },
+      { name: "macro_inflasi_lag1",value: 0.0273, group: "makro", extreme: false },
+      { name: "clr_x_inflasi",     value: +(last * 0.0273).toFixed(4), group: "makro", extreme: false },
+      { name: "clr_pct_vs_peers",  value: 0.31, group: "lain", extreme: false },
+      { name: "macro_bi_rate_lag1",value: 0.0600, group: "makro", extreme: false },
+    ];
+  }
+
+  // Model performance tables (Section 4, hardcoded)
+  const trackA = {
+    4: {
+      'Extra Trees': { MacroF1: 0.5689, F1_HR: 0.6723, Prec_HR: 0.6234, Rec_HR: 0.7512, AUC: 0.78 },
+      'XGBoost':     { MacroF1: 0.5845, F1_HR: 0.6945, Prec_HR: 0.6345, Rec_HR: 0.7634, AUC: 0.81 },
+      'LightGBM':    { MacroF1: 0.5778, F1_HR: 0.6812, Prec_HR: 0.6289, Rec_HR: 0.7589, AUC: 0.79 },
+      'Stacking':    { MacroF1: 0.5912, F1_HR: 0.7156, Prec_HR: 0.6489, Rec_HR: 0.7734, AUC: 0.83 },
+    },
+    12: {
+      'Extra Trees': { MacroF1: 0.5421, F1_HR: 0.6512, Prec_HR: 0.6011, Rec_HR: 0.7234, AUC: 0.76 },
+      'XGBoost':     { MacroF1: 0.5567, F1_HR: 0.6701, Prec_HR: 0.6178, Rec_HR: 0.7401, AUC: 0.78 },
+      'LightGBM':    { MacroF1: 0.5489, F1_HR: 0.6634, Prec_HR: 0.6123, Rec_HR: 0.7345, AUC: 0.77 },
+      'Stacking':    { MacroF1: 0.5612, F1_HR: 0.6789, Prec_HR: 0.6234, Rec_HR: 0.7456, AUC: 0.80 },
+    },
+    24: {
+      'Extra Trees': { MacroF1: 0.5189, F1_HR: 0.6234, Prec_HR: 0.5734, Rec_HR: 0.6912, AUC: 0.73 },
+      'XGBoost':     { MacroF1: 0.5267, F1_HR: 0.6378, Prec_HR: 0.5867, Rec_HR: 0.7012, AUC: 0.75 },
+      'LightGBM':    { MacroF1: 0.5234, F1_HR: 0.6312, Prec_HR: 0.5823, Rec_HR: 0.6978, AUC: 0.74 },
+      'Stacking':    { MacroF1: 0.5278, F1_HR: 0.6401, Prec_HR: 0.5889, Rec_HR: 0.7034, AUC: 0.76 },
+    },
+  };
+
+  const trackB = {
+    4: {
+      'Extra Trees': { F1_HR: 0.7234, Prec_HR: 0.7023, Rec_HR: 0.7456, AUC: 0.85, MacroF1: 0.7156 },
+      'XGBoost':     { F1_HR: 0.7389, Prec_HR: 0.7178, Rec_HR: 0.7612, AUC: 0.87, MacroF1: 0.7298 },
+      'LightGBM':    { F1_HR: 0.7312, Prec_HR: 0.7098, Rec_HR: 0.7534, AUC: 0.86, MacroF1: 0.7234 },
+      'SoftVoting':  { F1_HR: 0.7456, Prec_HR: 0.7234, Rec_HR: 0.7689, AUC: 0.88, MacroF1: 0.7345 },
+    },
+    12: {
+      'Extra Trees': { F1_HR: 0.7034, Prec_HR: 0.6856, Rec_HR: 0.7223, AUC: 0.83, MacroF1: 0.6956 },
+      'XGBoost':     { F1_HR: 0.7189, Prec_HR: 0.6989, Rec_HR: 0.7401, AUC: 0.85, MacroF1: 0.7102 },
+      'LightGBM':    { F1_HR: 0.7123, Prec_HR: 0.6923, Rec_HR: 0.7334, AUC: 0.84, MacroF1: 0.7045 },
+      'SoftVoting':  { F1_HR: 0.7245, Prec_HR: 0.7045, Rec_HR: 0.7456, AUC: 0.86, MacroF1: 0.7167 },
+    },
+    24: {
+      'Extra Trees': { F1_HR: 0.6612, Prec_HR: 0.6423, Rec_HR: 0.6812, AUC: 0.80, MacroF1: 0.6534 },
+      'XGBoost':     { F1_HR: 0.6745, Prec_HR: 0.6534, Rec_HR: 0.6967, AUC: 0.82, MacroF1: 0.6678 },
+      'LightGBM':    { F1_HR: 0.6789, Prec_HR: 0.6578, Rec_HR: 0.7012, AUC: 0.82, MacroF1: 0.6712 },
+      'SoftVoting':  { F1_HR: 0.6712, Prec_HR: 0.6512, Rec_HR: 0.6923, AUC: 0.81, MacroF1: 0.6634 },
+    },
+  };
+
+  const bestTrackBPerH = { 4: 'SoftVoting', 12: 'SoftVoting', 24: 'LightGBM' };
+  const bestTrackAPerH = { 4: 'Stacking', 12: 'Stacking', 24: 'Stacking' };
+
+  const macroAblation = [
+    { H: 4,  delta: 0.0082 },
+    { H: 12, delta: 0.0301 },
+    { H: 24, delta: 0.0103 },
+  ];
+
+  const macroCorr = [
+    { v: "Inflasi YoY",  r: -0.08, p: "<0.05", note: "Lemah negatif, signifikan" },
+    { v: "BI Rate",      r: -0.07, p: "<0.05", note: "Lemah negatif, signifikan" },
+    { v: "Kurs USD/IDR", r: -0.10, p: "<0.05", note: "Lemah negatif, signifikan" },
+  ];
+
+  return {
+    thresholds,
+    q25q75,
+    horizonStats,
+    umkmList,
+    topFeaturesH4,
+    featureValuesFor,
+    trackA,
+    trackB,
+    bestTrackAPerH,
+    bestTrackBPerH,
+    macroAblation,
+    macroCorr,
+  };
+})();
+
+  </script>
+  <script type="text/babel" data-presets="react">
+// Sidebar — friendly menu for UMKM owners
+const Sidebar = ({ currentPage, setPage }) => {
+  const navItems = [
+    { id: 'landing', icon: '🏠', label: 'Beranda',           hint: 'Halaman utama' },
+    { id: 'input',   icon: '📝', label: 'Prediksi Baru',     hint: 'Mulai analisis usaha' },
+    { id: 'hasil',   icon: '📊', label: 'Laporan Saya',      hint: 'Lihat hasil prediksi' },
+    { id: 'detail',  icon: '🔍', label: 'Analisis Mendalam', hint: 'Telusuri detail' },
+    { id: 'riset',   icon: 'ℹ️',  label: 'Tentang Sistem',    hint: 'Akurasi & cara kerja' },
+  ];
+
+  return (
+    <aside className="sidebar">
+      <div className="sidebar-brand">
+        <div className="brand-mark">💧</div>
+        <div className="brand-text">
+          <div className="brand-name">Cek Kesehatan Kas</div>
+          <div className="brand-sub">untuk UMKM Indonesia</div>
+        </div>
+      </div>
+
+      <div className="sidebar-section-label">Menu</div>
+      {navItems.map(item => (
+        <div
+          key={item.id}
+          className={`nav-item ${currentPage === item.id ? 'active' : ''}`}
+          onClick={() => setPage(item.id)}
+          style={{flexDirection: 'column', alignItems: 'flex-start', gap: 2, padding: '10px 12px'}}
+        >
+          <div style={{display: 'flex', alignItems: 'center', gap: 10, width: '100%'}}>
+            <span className="nav-icon">{item.icon}</span>
+            <span>{item.label}</span>
+          </div>
+          {currentPage !== item.id && (
+            <div style={{fontSize: 10.5, color: 'var(--ink-4)', marginLeft: 28, marginTop: 1}}>
+              {item.hint}
+            </div>
+          )}
+        </div>
+      ))}
+
+      <div className="sidebar-divider"></div>
+
+      <div style={{
+        background: 'var(--safe-bg)', border: '1px solid rgba(39,174,96,0.25)',
+        borderRadius: 'var(--r-md)', padding: '10px 12px',
+        display: 'flex', alignItems: 'center', gap: 8,
+      }}>
+        <span style={{width: 8, height: 8, borderRadius: '50%', background: 'var(--safe)', flexShrink: 0}}></span>
+        <div>
+          <div style={{fontSize: 12, fontWeight: 700, color: 'var(--safe)'}}>Sistem siap digunakan</div>
+          <div style={{fontSize: 10.5, color: 'var(--ink-3)', marginTop: 1}}>
+            Sudah disetel optimal untuk Anda
+          </div>
+        </div>
+      </div>
+
+      <div className="sidebar-footer">
+        Prototipe Tugas Akhir 2025<br/>
+        <strong>Dedy Hofmanindo Saragih</strong><br/>
+        <span style={{opacity: 0.7}}>STI ITB · NIM 18222085</span>
+      </div>
+    </aside>
+  );
+};
+
+window.Sidebar = Sidebar;
+
+  </script>
+  <script type="text/babel" data-presets="react">
+// Beranda — welcome page for UMKM owners (non-technical)
+const LandingPage = ({ setPage }) => {
+  const steps = [
+    {
+      n: 1, icon: '📤',
+      title: 'Unggah Riwayat Transaksi',
+      desc: 'Cukup 2 file sederhana: catatan uang masuk dan uang keluar. Belum siap? Pakai data contoh.',
+    },
+    {
+      n: 2, icon: '🎯',
+      title: 'Pilih Pengaturan Singkat',
+      desc: 'Tentukan mau lihat berapa lama ke depan (1, 3, atau 6 bulan) dan cara menampilkan hasil.',
+    },
+    {
+      n: 3, icon: '📋',
+      title: 'Terima Laporan & Saran',
+      desc: 'Sistem memberi tahu apakah usaha Anda aman atau berisiko, lengkap dengan tindakan yang bisa Anda lakukan.',
+    },
+  ];
+
+  const benefits = [
+    {
+      icon: '🔮',
+      title: 'Lihat Risiko Sebelum Terjadi',
+      desc: 'Sistem belajar dari ribuan pola usaha kecil sehingga bisa memperkirakan masalah arus kas berminggu-minggu sebelum terjadi.',
+    },
+    {
+      icon: '🌐',
+      title: 'Sudah Pertimbangkan Ekonomi Nasional',
+      desc: 'Inflasi, suku bunga BI, dan nilai tukar rupiah otomatis dimasukkan — Anda tidak perlu mengerti angka-angka itu.',
+    },
+    {
+      icon: '🤝',
+      title: 'Bahasa yang Mudah Dipahami',
+      desc: 'Tidak ada istilah teknis. Hasilnya jelas: aman atau berisiko, naik atau turun, beserta saran yang bisa langsung dijalankan.',
+    },
+  ];
+
+  return (
+    <div className="content">
+      {/* Hero */}
+      <div style={{
+        background: 'linear-gradient(135deg, #2C3E50 0%, #34495E 100%)',
+        color: 'white', borderRadius: 'var(--r-lg)',
+        padding: '40px 44px', marginBottom: 22, position: 'relative', overflow: 'hidden',
+      }}>
+        <div style={{
+          position: 'absolute', right: -60, top: -60,
+          width: 240, height: 240,
+          background: 'radial-gradient(circle, rgba(52,152,219,0.35) 0%, transparent 60%)',
+          pointerEvents: 'none',
+        }}/>
+        <div style={{maxWidth: 720, position: 'relative'}}>
+          <div style={{
+            fontSize: 11.5, letterSpacing: '0.1em', textTransform: 'uppercase',
+            opacity: 0.65, fontWeight: 600, marginBottom: 10,
+          }}>Selamat Datang</div>
+          <h1 style={{
+            fontSize: 32, fontWeight: 700, margin: '0 0 12px',
+            letterSpacing: '-0.02em', lineHeight: 1.15,
+          }}>
+            Cek Kesehatan Arus Kas<br/>Usaha Anda
+          </h1>
+          <p style={{margin: 0, fontSize: 15, opacity: 0.85, lineHeight: 1.55, maxWidth: 600}}>
+            Aplikasi ini membantu pemilik UMKM melihat apakah usaha mereka akan menghadapi
+            masalah arus kas dalam beberapa minggu ke depan — sehingga bisa bertindak lebih awal.
+          </p>
+          <div style={{marginTop: 22, display: 'flex', gap: 10, flexWrap: 'wrap'}}>
+            <button
+              className="btn btn-accent"
+              style={{padding: '12px 22px', fontSize: 14}}
+              onClick={() => setPage('input')}
+            >
+              🚀 Mulai Prediksi
+            </button>
+            <button
+              className="btn btn-ghost"
+              style={{padding: '12px 22px', fontSize: 14, background: 'rgba(255,255,255,0.1)', color: 'white', borderColor: 'rgba(255,255,255,0.25)'}}
+              onClick={() => setPage('riset')}
+            >
+              ℹ️ Tentang Sistem
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Bagaimana cara kerjanya */}
+      <h2 style={{
+        fontSize: 18, fontWeight: 700, color: 'var(--ink)',
+        margin: '8px 0 16px', letterSpacing: '-0.01em',
+      }}>Bagaimana cara kerjanya?</h2>
+
+      <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 28}}>
+        {steps.map((s, i) => (
+          <div key={s.n} style={{
+            background: 'white', border: '1px solid var(--line)',
+            borderRadius: 'var(--r-lg)', padding: '20px 22px', position: 'relative',
+          }}>
+            <div style={{
+              position: 'absolute', top: 16, right: 18,
+              fontSize: 40, fontWeight: 800,
+              color: 'var(--line-2)', lineHeight: 1, letterSpacing: '-0.04em',
+            }}>{s.n}</div>
+            <div style={{fontSize: 28, marginBottom: 10}}>{s.icon}</div>
+            <div style={{fontSize: 15, fontWeight: 700, color: 'var(--ink)', marginBottom: 6, letterSpacing: '-0.01em'}}>
+              {s.title}
+            </div>
+            <div style={{fontSize: 12.5, color: 'var(--ink-3)', lineHeight: 1.55}}>
+              {s.desc}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Kenapa pakai sistem ini */}
+      <h2 style={{
+        fontSize: 18, fontWeight: 700, color: 'var(--ink)',
+        margin: '8px 0 16px', letterSpacing: '-0.01em',
+      }}>Apa yang membuat sistem ini berbeda?</h2>
+
+      <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 28}}>
+        {benefits.map((b, i) => (
+          <div key={i} style={{
+            background: 'white', border: '1px solid var(--line)',
+            borderRadius: 'var(--r-lg)', padding: '18px 20px',
+          }}>
+            <div style={{fontSize: 22, marginBottom: 8}}>{b.icon}</div>
+            <div style={{fontSize: 13.5, fontWeight: 700, color: 'var(--ink)', marginBottom: 6}}>
+              {b.title}
+            </div>
+            <div style={{fontSize: 12, color: 'var(--ink-3)', lineHeight: 1.55}}>
+              {b.desc}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA bottom */}
+      <div style={{
+        background: 'var(--safe-bg)', border: '1px solid rgba(39,174,96,0.25)',
+        borderRadius: 'var(--r-lg)', padding: '24px 28px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        gap: 16, flexWrap: 'wrap',
+      }}>
+        <div>
+          <div style={{fontSize: 17, fontWeight: 700, color: 'var(--ink)', marginBottom: 4}}>
+            Siap mencoba?
+          </div>
+          <div style={{fontSize: 13, color: 'var(--ink-2)', lineHeight: 1.5, maxWidth: 540}}>
+            Tidak butuh akun, tidak butuh data sensitif. Anda bisa mulai dengan data contoh untuk melihat
+            bagaimana laporannya nanti.
+          </div>
+        </div>
+        <button className="btn btn-primary" style={{padding: '12px 22px', fontSize: 14}} onClick={() => setPage('input')}>
+          Mulai Prediksi Sekarang →
+        </button>
+      </div>
+
+      <div className="disclaimer">
+        <strong>⚠️ Catatan:</strong> Sistem ini adalah prototipe Tugas Akhir STI ITB 2025. Hasil prediksi
+        bersifat indikatif dan tidak dapat digunakan sebagai dasar tunggal keputusan bisnis.
+      </div>
+    </div>
+  );
+};
+
+window.LandingPage = LandingPage;
+
+  </script>
+  <script type="text/babel" data-presets="react">
+// Page 1: Input Data & Prediksi — Wizard 4 langkah
+// Alur yang dipakai pengguna UMKM:
+//   1. Data Usaha       — identitas + upload sales.csv + expense.csv (+ data contoh + template)
+//   2. Rentang Prediksi — 1 / 3 / 6 bulan ke depan
+//   3. Cara Menampilkan — 2 atau 3 tingkat (threshold slider hanya untuk 2 tingkat).
+//                         Data ekonomi nasional OTOMATIS terintegrasi, bukan opsi.
+//   4. Konfirmasi       — ringkasan + jalankan prediksi
+
+const SECTORS = ['Retail', 'Makanan & Minuman', 'Manufaktur / Konveksi', 'Jasa', 'Lainnya'];
+
+// ----- CSV utilities -----
+const parseCSV = (text) => {
+  const clean = text.replace(/^\uFEFF/, '').trim();
+  if (!clean) return { error: 'File CSV kosong.' };
+  const lines = clean.split(/\r?\n/).filter(l => l.length > 0);
+  if (lines.length < 2) return { error: 'CSV harus berisi header + minimal 1 baris data.' };
+  const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/^"|"$/g, ''));
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cells = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+    const obj = {};
+    headers.forEach((h, j) => { obj[h] = cells[j] !== undefined ? cells[j] : ''; });
+    rows.push(obj);
+  }
+  return { headers, rows };
+};
+
+const triggerDownload = (filename, csvText) => {
+  const blob = new Blob([csvText], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+
+const buildTemplate = (kind) => {
+  const col = kind === 'sales' ? 'sub_total' : 'total';
+  const lines = [`date,${col}`];
+  const today = new Date();
+  for (let i = 139; i >= 0; i--) {
+    const d = new Date(today.getTime() - i * 86400000);
+    if (d.getDay() === 0) continue;
+    const ds = d.toISOString().slice(0, 10);
+    const base = kind === 'sales' ? 1_250_000 : 850_000;
+    const wave = Math.round(Math.sin(i * 0.18) * (kind === 'sales' ? 400_000 : 250_000));
+    const weekly = Math.round(Math.sin(i * 0.9) * (kind === 'sales' ? 180_000 : 100_000));
+    lines.push(`${ds},${base + wave + weekly}`);
+  }
+  return lines.join('\n') + '\n';
+};
+
+const validateCsv = (parsed, kind) => {
+  if (parsed.error) return { error: parsed.error };
+  const valueCol = kind === 'sales' ? 'sub_total' : 'total';
+  const need = ['date', valueCol];
+  const missing = need.filter(c => !parsed.headers.includes(c));
+  if (missing.length) {
+    return { error: `Kolom wajib hilang: ${missing.map(c => `"${c}"`).join(', ')}. Ditemukan: ${parsed.headers.join(', ') || '—'}` };
+  }
+  if (parsed.headers.includes('customer_id')) {
+    return { error: 'Format lama terdeteksi (kolom "customer_id"). Pada versi ini, 1 file = 1 UMKM. Hapus kolom customer_id.' };
+  }
+  const cleanRows = [];
+  let badDates = 0, badValues = 0;
+  for (const r of parsed.rows) {
+    const ds = r.date;
+    const v = parseFloat(String(r[valueCol]).replace(/[,_\s]/g, ''));
+    const ts = Date.parse(ds);
+    if (isNaN(ts)) { badDates++; continue; }
+    if (!isFinite(v)) { badValues++; continue; }
+    cleanRows.push({ date: ds, ts, value: v });
+  }
+  if (!cleanRows.length) return { error: 'Tidak ada baris valid setelah parsing tanggal & nilai.' };
+  cleanRows.sort((a, b) => a.ts - b.ts);
+  const tsMin = cleanRows[0].ts;
+  const tsMax = cleanRows[cleanRows.length - 1].ts;
+  const dayspan = (tsMax - tsMin) / 86400000;
+  const weeks = Math.max(1, Math.floor(dayspan / 7) + 1);
+  const total = cleanRows.reduce((s, r) => s + r.value, 0);
+  return {
+    rows: cleanRows.length, badDates, badValues, weeks,
+    minDate: new Date(tsMin).toISOString().slice(0, 10),
+    maxDate: new Date(tsMax).toISOString().slice(0, 10),
+    total, preview: cleanRows.slice(0, 5), valueCol,
+  };
+};
+
+const MIN_WEEKS = { 4: 12, 12: 20, 24: 32 };
+
+// Human labels for horizons
+const HORIZON_LABELS = {
+  4:  { headline: '1 bulan ke depan', sub: '4 minggu',  caption: 'Paling akurat · perencanaan jangka pendek' },
+  12: { headline: '3 bulan ke depan', sub: '12 minggu', caption: 'Akurasi menengah · perencanaan kuartalan' },
+  24: { headline: '6 bulan ke depan', sub: '24 minggu', caption: 'Jangka panjang · perencanaan strategis' },
+};
+
+// =========================================================================
+const InputPage = ({ setPage, thresholds, horizonStats, onPredict, predictionDone }) => {
+  // Step state
+  const [step, setStep] = React.useState(1);
+
+  // Step 1: identitas + files
+  const [umkmId, setUmkmId] = React.useState('');
+  const [umkmName, setUmkmName] = React.useState('');
+  const [umkmSector, setUmkmSector] = React.useState('Retail');
+  const [tab, setTab] = React.useState('upload');
+  const [salesData, setSalesData] = React.useState(null);
+  const [expenseData, setExpenseData] = React.useState(null);
+  const [salesError, setSalesError] = React.useState(null);
+  const [expenseError, setExpenseError] = React.useState(null);
+
+  // Step 2: horizon
+  const [horizon, setHorizon] = React.useState(4);
+
+  // Step 3: mode
+  const [mode, setMode] = React.useState('3'); // '2' = dua tingkat, '3' = tiga tingkat
+  const [tau, setTau] = React.useState(thresholds[4]);
+
+  // Step 4: running
+  const [running, setRunning] = React.useState(false);
+  const [pipelineStep, setPipelineStep] = React.useState(0);
+
+  const salesInputRef = React.useRef(null);
+  const expenseInputRef = React.useRef(null);
+
+  // When horizon changes, sync default tau
+  React.useEffect(() => { setTau(thresholds[horizon]); }, [horizon, thresholds]);
+
+  // ---- File handling ----
+  const handleFile = (kind, file) => {
+    if (!file) return;
+    if (!/\.csv$/i.test(file.name)) {
+      const err = `File harus berekstensi .csv (dapat: ${file.name})`;
+      if (kind === 'sales') { setSalesError(err); setSalesData(null); }
+      else { setExpenseError(err); setExpenseData(null); }
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const txt = String(ev.target.result || '');
+      const parsed = parseCSV(txt);
+      const result = validateCsv(parsed, kind);
+      if (result.error) {
+        if (kind === 'sales') { setSalesError(result.error); setSalesData(null); }
+        else { setExpenseError(result.error); setExpenseData(null); }
+        return;
+      }
+      const data = { name: file.name, size: file.size, ...result };
+      if (kind === 'sales') { setSalesData(data); setSalesError(null); }
+      else { setExpenseData(data); setExpenseError(null); }
+    };
+    reader.onerror = () => {
+      const err = 'Gagal membaca file. Coba lagi.';
+      if (kind === 'sales') setSalesError(err); else setExpenseError(err);
+    };
+    reader.readAsText(file);
+  };
+
+  const onDrop = (kind) => (e) => {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) handleFile(kind, f);
+  };
+  const onDragOver = (e) => { e.preventDefault(); e.currentTarget.classList.add('drag-over'); };
+  const onDragLeave = (e) => { e.currentTarget.classList.remove('drag-over'); };
+
+  const removeFile = (kind) => {
+    if (kind === 'sales') { setSalesData(null); setSalesError(null); if (salesInputRef.current) salesInputRef.current.value = ''; }
+    else { setExpenseData(null); setExpenseError(null); if (expenseInputRef.current) expenseInputRef.current.value = ''; }
+  };
+
+  const loadDemoFiles = () => {
+    const fakeFile = (name, text) => {
+      const blob = new Blob([text], { type: 'text/csv' });
+      return new File([blob], name, { type: 'text/csv' });
+    };
+    const sales = fakeFile('contoh_penjualan.csv', buildTemplate('sales'));
+    const expense = fakeFile('contoh_pengeluaran.csv', buildTemplate('expense'));
+    handleFile('sales', sales);
+    handleFile('expense', expense);
+    if (!umkmId) setUmkmId('UMKM_DEMO_01');
+    if (!umkmName) setUmkmName('Toko Demo Mandiri');
+  };
+
+  // ---- Validation ----
+  const identityFilled = umkmId.trim() && umkmName.trim();
+  const haveFiles = salesData && expenseData;
+  const minWeeks = MIN_WEEKS[horizon];
+  const enoughHistory = haveFiles && Math.min(salesData.weeks, expenseData.weeks) >= minWeeks;
+  const datesOverlap = haveFiles && salesData.minDate && expenseData.minDate
+    ? !(salesData.maxDate < expenseData.minDate || expenseData.maxDate < salesData.minDate)
+    : true;
+
+  const step1Issues = [];
+  if (!identityFilled) step1Issues.push('Lengkapi nama & ID usaha Anda');
+  if (!salesData) step1Issues.push('Unggah data penjualan');
+  if (!expenseData) step1Issues.push('Unggah data pengeluaran');
+  if (haveFiles && !datesOverlap) step1Issues.push('Rentang tanggal penjualan & pengeluaran tidak overlap');
+
+  // Step 1 OK if identity + files + overlap; "enoughHistory" depends on horizon so we check at step 4.
+  const step1Ready = step1Issues.length === 0;
+  const horizonHistoryOK = !haveFiles || enoughHistory;
+
+  // ---- Pipeline ----
+  const pipelineSteps = [
+    `Membaca data ${umkmName || umkmId || 'usaha Anda'}`,
+    'Mengelompokkan transaksi per minggu',
+    'Menghitung rasio arus kas (pemasukan ÷ pengeluaran)',
+    'Menggabungkan dengan data ekonomi nasional',
+    'Menjalankan model & menyusun laporan',
+  ];
+
+  const buildWeeklyCLR = () => {
+    const weeks = Math.min(salesData.weeks, expenseData.weeks);
+    const meanIn = salesData.total / weeks;
+    const meanOut = expenseData.total / weeks;
+    const baseCLR = meanOut > 0 ? meanIn / meanOut : 1;
+    let s = 0;
+    for (let i = 0; i < (umkmId || 'X').length; i++) s += (umkmId || 'X').charCodeAt(i);
+    const rand = () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+    const series = [];
+    let drift = 0;
+    for (let w = 0; w < weeks; w++) {
+      drift += (rand() - 0.5) * 0.04;
+      const noise = (rand() - 0.5) * 0.25;
+      series.push(Math.max(0.1, +(baseCLR * (1 + drift) + noise).toFixed(3)));
+    }
+    return { series, baseCLR };
+  };
+
+  const runPipeline = () => {
+    setRunning(true);
+    setPipelineStep(0);
+    let i = 0;
+    const tick = () => {
+      i++;
+      setPipelineStep(i);
+      if (i < pipelineSteps.length) {
+        setTimeout(tick, 480);
+      } else {
+        setTimeout(() => {
+          const { series } = buildWeeklyCLR();
+          const last = series[series.length - 1];
+          const last4 = series.slice(-4);
+          const mean = last4.reduce((a, b) => a + b, 0) / last4.length;
+          const ms = [0, 1, 2, 3].reduce((acc, j) => acc + (j - 1.5) * (last4[j] - mean), 0);
+          const slope4 = +(ms / 5).toFixed(3);
+          const tren = slope4 > 0.02 ? 'up' : slope4 < -0.02 ? 'down' : 'flat';
+          const q25 = 0.82;
+          let prob = 0.5
+            + 0.45 * Math.max(0, (q25 - last) / q25)
+            - 0.30 * Math.max(0, last - 1.4)
+            - 1.5 * slope4;
+          prob = Math.max(0.03, Math.min(0.97, prob));
+
+          const submittedUMKM = {
+            id: umkmId.trim(),
+            nama: umkmName.trim(),
+            sektor: umkmSector,
+            prob: +prob.toFixed(3),
+            clrSeries: series,
+            clrLast: last,
+            slope4, tren,
+            weekLast: salesData.maxDate,
+            weeks: Math.min(salesData.weeks, expenseData.weeks),
+            dateRange: `${salesData.minDate} → ${salesData.maxDate}`,
+            totalInflow: salesData.total,
+            totalOutflow: expenseData.total,
+            salesFileName: salesData.name,
+            expenseFileName: expenseData.name,
+            submittedAt: new Date().toISOString(),
+          };
+          onPredict({ horizon, tau, mode, submittedUMKM });
+          setRunning(false);
+        }, 350);
+      }
+    };
+    setTimeout(tick, 420);
+  };
+
+  // ===== Stepper definition =====
+  const stepDefs = [
+    { n: 1, label: 'Data Usaha',         hint: 'Identitas & riwayat transaksi' },
+    { n: 2, label: 'Rentang Prediksi',   hint: 'Mau lihat berapa lama ke depan?' },
+    { n: 3, label: 'Cara Tampilan',      hint: 'Tingkat detail hasil prediksi' },
+    { n: 4, label: 'Konfirmasi',         hint: 'Periksa & jalankan' },
+  ];
+
+  const goNext = () => setStep(s => Math.min(4, s + 1));
+  const goBack = () => setStep(s => Math.max(1, s - 1));
+
+  return (
+    <div className="content">
+      <div className="page-header">
+        <div className="page-eyebrow">Halaman 1 dari 4</div>
+        <h1 className="page-title">Mulai Prediksi Arus Kas Usaha Anda</h1>
+        <p className="page-sub">
+          Empat langkah singkat. Kami akan memandu Anda dari unggah data sampai laporan prediksi.
+        </p>
+      </div>
+
+      <Stepper steps={stepDefs} current={step} onJump={(n) => {
+        // Allow jumping backwards freely; forward jumps only to steps already validly reachable.
+        if (n < step) setStep(n);
+        else if (n === step) {/* noop */}
+        else if (n === 2 && step1Ready) setStep(2);
+        else if (n === 3 && step1Ready) setStep(3);
+        else if (n === 4 && step1Ready) setStep(4);
+      }} />
+
+      {step === 1 && (
+        <Step1Data
+          umkmId={umkmId} setUmkmId={setUmkmId}
+          umkmName={umkmName} setUmkmName={setUmkmName}
+          umkmSector={umkmSector} setUmkmSector={setUmkmSector}
+          tab={tab} setTab={setTab}
+          salesData={salesData} expenseData={expenseData}
+          salesError={salesError} expenseError={expenseError}
+          salesInputRef={salesInputRef} expenseInputRef={expenseInputRef}
+          handleFile={handleFile} onDrop={onDrop}
+          onDragOver={onDragOver} onDragLeave={onDragLeave}
+          removeFile={removeFile} loadDemoFiles={loadDemoFiles}
+          datesOverlap={datesOverlap}
+        />
+      )}
+
+      {step === 2 && (
+        <Step2Horizon
+          horizon={horizon} setHorizon={setHorizon}
+          horizonStats={horizonStats}
+          haveFiles={haveFiles} salesData={salesData} expenseData={expenseData}
+          enoughHistory={enoughHistory} minWeeks={minWeeks}
+        />
+      )}
+
+      {step === 3 && (
+        <Step3Mode
+          mode={mode} setMode={setMode}
+          tau={tau} setTau={setTau}
+          horizon={horizon} thresholds={thresholds}
+        />
+      )}
+
+      {step === 4 && (
+        <Step4Confirm
+          umkmId={umkmId} umkmName={umkmName} umkmSector={umkmSector}
+          salesData={salesData} expenseData={expenseData}
+          horizon={horizon} mode={mode} tau={tau}
+          horizonStats={horizonStats}
+          horizonHistoryOK={horizonHistoryOK} minWeeks={minWeeks}
+          running={running} pipelineStep={pipelineStep} pipelineSteps={pipelineSteps}
+          runPipeline={runPipeline}
+          predictionDone={predictionDone}
+          setPage={setPage}
+          goBack={goBack}
+        />
+      )}
+
+      {/* Nav buttons (except on step 4 — handled inline there) */}
+      {step < 4 && (
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 18}}>
+          <button
+            className="btn btn-ghost"
+            onClick={goBack}
+            disabled={step === 1}
+            style={step === 1 ? {visibility: 'hidden'} : {}}
+          >← Kembali</button>
+          <div style={{fontSize: 12, color: 'var(--ink-4)'}}>
+            Langkah {step} dari 4
+          </div>
+          <button
+            className="btn btn-primary"
+            onClick={goNext}
+            disabled={step === 1 && !step1Ready}
+          >
+            Lanjutkan →
+          </button>
+        </div>
+      )}
+
+      <div className="disclaimer">
+        <strong>⚠️ Catatan:</strong> Prototipe Tugas Akhir STI ITB 2025. Prediksi tidak dapat
+        digunakan sebagai dasar keputusan bisnis nyata tanpa validasi lebih lanjut.
+      </div>
+    </div>
+  );
+};
+
+// =========================================================================
+// Stepper bar
+const Stepper = ({ steps, current, onJump }) => (
+  <div style={{
+    background: 'white', border: '1px solid var(--line)', borderRadius: 'var(--r-lg)',
+    padding: '16px 8px', marginBottom: 18, display: 'grid',
+    gridTemplateColumns: `repeat(${steps.length}, 1fr)`, gap: 0, position: 'relative',
+  }}>
+    {steps.map((s, i) => {
+      const done = s.n < current;
+      const active = s.n === current;
+      return (
+        <div
+          key={s.n}
+          onClick={() => onJump(s.n)}
+          style={{
+            cursor: 'pointer', padding: '4px 12px', display: 'flex',
+            alignItems: 'center', gap: 10, position: 'relative', minWidth: 0,
+          }}
+        >
+          {i > 0 && (
+            <div style={{
+              position: 'absolute', left: 0, top: '50%',
+              width: '50%', height: 2,
+              background: done || active ? 'var(--accent)' : 'var(--line)',
+              transform: 'translate(-100%, -50%)', zIndex: 0,
+            }}/>
+          )}
+          <div style={{
+            width: 28, height: 28, borderRadius: '50%',
+            background: done ? 'var(--accent)' : active ? 'white' : 'var(--canvas)',
+            border: `2px solid ${done || active ? 'var(--accent)' : 'var(--line-2)'}`,
+            color: done ? 'white' : active ? 'var(--accent)' : 'var(--ink-4)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 12, fontWeight: 700, flexShrink: 0, zIndex: 1, position: 'relative',
+            transition: 'all .2s',
+          }}>
+            {done ? '✓' : s.n}
+          </div>
+          <div style={{minWidth: 0}}>
+            <div style={{
+              fontSize: 13, fontWeight: active ? 700 : 600,
+              color: active ? 'var(--ink)' : done ? 'var(--ink-2)' : 'var(--ink-4)',
+              lineHeight: 1.2, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap',
+            }}>{s.label}</div>
+            <div style={{fontSize: 11, color: 'var(--ink-4)', marginTop: 2,
+              textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap',
+            }}>{s.hint}</div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+);
+
+// =========================================================================
+// STEP 1 — Data Usaha (identitas + upload)
+const Step1Data = ({
+  umkmId, setUmkmId, umkmName, setUmkmName, umkmSector, setUmkmSector,
+  tab, setTab,
+  salesData, expenseData, salesError, expenseError,
+  salesInputRef, expenseInputRef,
+  handleFile, onDrop, onDragOver, onDragLeave, removeFile, loadDemoFiles,
+  datesOverlap,
+}) => {
+  const haveFiles = salesData && expenseData;
+  return (
+    <>
+      <div className="card" style={{marginBottom: 14}}>
+        <div style={{display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8}}>
+          <div>
+            <div className="card-title">🪪 Tentang Usaha Anda</div>
+            <div className="card-sub">Beri nama dan kode singkat untuk usaha yang akan dianalisis.</div>
+          </div>
+          <button className="btn btn-ghost" onClick={loadDemoFiles}>
+            ✨ Belum siap? Pakai data contoh
+          </button>
+        </div>
+        <div style={{display: 'grid', gridTemplateColumns: '1fr 1.5fr 1fr', gap: 16, marginTop: 12}}>
+          <div>
+            <label className="field-label">Kode Usaha <span style={{color: 'var(--hr)'}}>*</span></label>
+            <input
+              className="input mono"
+              placeholder="cth: TOKO_BU_SRI"
+              value={umkmId}
+              onChange={(e) => setUmkmId(e.target.value)}
+              autoComplete="off"
+            />
+            <div className="field-hint">Tanpa spasi, untuk arsip Anda.</div>
+          </div>
+          <div>
+            <label className="field-label">Nama Usaha <span style={{color: 'var(--hr)'}}>*</span></label>
+            <input
+              className="input"
+              placeholder="cth: Toko Sembako Bu Sri"
+              value={umkmName}
+              onChange={(e) => setUmkmName(e.target.value)}
+            />
+            <div className="field-hint">Akan muncul di laporan hasil prediksi.</div>
+          </div>
+          <div>
+            <label className="field-label">Jenis Usaha</label>
+            <select className="select" value={umkmSector} onChange={(e) => setUmkmSector(e.target.value)}>
+              {SECTORS.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+            <div className="field-hint">Untuk perbandingan dengan usaha sejenis.</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-title">📁 Riwayat Transaksi (2 File)</div>
+        <div className="card-sub">
+          Sistem perlu dua file: catatan <strong>uang masuk</strong> (penjualan) dan
+          <strong> uang keluar</strong> (pengeluaran). Format CSV.
+        </div>
+
+        <div className="tabs">
+          <div className={`tab ${tab === 'upload' ? 'active' : ''}`} onClick={() => setTab('upload')}>
+            Unggah File Saya
+          </div>
+          <div className={`tab ${tab === 'format' ? 'active' : ''}`} onClick={() => setTab('format')}>
+            Format & Template
+          </div>
+        </div>
+
+        {tab === 'upload' && (
+          <>
+            <div className="grid-2">
+              <FileDrop
+                kind="sales"
+                title="Catatan Penjualan (Uang Masuk)"
+                hint="2 kolom: tanggal, jumlah penjualan"
+                file={salesData} error={salesError}
+                inputRef={salesInputRef}
+                onPick={(f) => handleFile('sales', f)}
+                onDrop={onDrop('sales')}
+                onDragOver={onDragOver} onDragLeave={onDragLeave}
+                onRemove={() => removeFile('sales')}
+              />
+              <FileDrop
+                kind="expense"
+                title="Catatan Pengeluaran (Uang Keluar)"
+                hint="2 kolom: tanggal, jumlah pengeluaran"
+                file={expenseData} error={expenseError}
+                inputRef={expenseInputRef}
+                onPick={(f) => handleFile('expense', f)}
+                onDrop={onDrop('expense')}
+                onDragOver={onDragOver} onDragLeave={onDragLeave}
+                onRemove={() => removeFile('expense')}
+              />
+            </div>
+
+            {haveFiles && (
+              <FilePreview salesData={salesData} expenseData={expenseData} datesOverlap={datesOverlap}/>
+            )}
+
+            {!salesData && !expenseData && (
+              <div className="alert alert-info" style={{marginTop: 14}}>
+                <span className="alert-icon">💡</span>
+                <div>
+                  <div className="alert-title">Belum punya file siap pakai?</div>
+                  Klik <strong>"Pakai data contoh"</strong> di atas untuk mencoba sistem, atau
+                  buka tab <strong>Format & Template</strong> untuk mengunduh contoh yang bisa Anda isi.
+                </div>
+              </div>
+            )}
+          </>
+        )}
+
+        {tab === 'format' && <FormatTab />}
+      </div>
+    </>
+  );
+};
+
+// =========================================================================
+// STEP 2 — Rentang Prediksi
+const Step2Horizon = ({ horizon, setHorizon, horizonStats, haveFiles, salesData, expenseData, enoughHistory, minWeeks }) => {
+  return (
+    <>
+      <div className="card">
+        <div className="card-title">⏳ Mau lihat sejauh apa ke depan?</div>
+        <div className="card-sub">
+          Pilih jangka waktu prediksi. Semakin dekat, semakin akurat.
+        </div>
+
+        <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginTop: 12}}>
+          {[4, 12, 24].map(h => {
+            const label = HORIZON_LABELS[h];
+            const selected = horizon === h;
+            const accuracyPct = Math.round(horizonStats[h].macroF1 * 100);
+            return (
+              <div
+                key={h}
+                onClick={() => setHorizon(h)}
+                style={{
+                  border: `2px solid ${selected ? 'var(--accent)' : 'var(--line-2)'}`,
+                  background: selected ? 'rgba(52, 152, 219, 0.04)' : 'white',
+                  borderRadius: 'var(--r-lg)', padding: '18px 18px 16px',
+                  cursor: 'pointer', transition: 'all .15s', position: 'relative',
+                }}
+              >
+                {selected && (
+                  <div style={{
+                    position: 'absolute', top: 12, right: 12,
+                    width: 22, height: 22, borderRadius: '50%',
+                    background: 'var(--accent)', color: 'white',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 12, fontWeight: 700,
+                  }}>✓</div>
+                )}
+                <div style={{
+                  fontSize: 11, fontWeight: 600, letterSpacing: '0.06em',
+                  textTransform: 'uppercase', color: selected ? 'var(--accent)' : 'var(--ink-4)',
+                  marginBottom: 6,
+                }}>{label.sub}</div>
+                <div style={{fontSize: 22, fontWeight: 700, color: 'var(--ink)', lineHeight: 1.15, letterSpacing: '-0.01em'}}>
+                  {label.headline}
+                </div>
+                <div style={{fontSize: 12.5, color: 'var(--ink-3)', marginTop: 6, lineHeight: 1.4}}>
+                  {label.caption}
+                </div>
+
+                <div style={{
+                  marginTop: 14, paddingTop: 12,
+                  borderTop: '1px dashed var(--line)',
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  fontSize: 11.5, color: 'var(--ink-3)',
+                }}>
+                  <span>Akurasi model</span>
+                  <span className="mono" style={{fontWeight: 700, color: 'var(--ink-2)'}}>
+                    ~{accuracyPct}%
+                  </span>
+                </div>
+                <div style={{marginTop: 6, fontSize: 11, color: 'var(--ink-4)'}}>
+                  Butuh riwayat ≥ <span className="mono">{MIN_WEEKS[h]} minggu</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="alert alert-info" style={{marginTop: 16}}>
+          <span className="alert-icon">💡</span>
+          <div>
+            <div className="alert-title">Tidak yakin?</div>
+            Jika baru pertama kali mencoba, pilih <strong>1 bulan ke depan</strong>. Prediksinya
+            paling tajam dan kebutuhan datanya paling ringan.
+          </div>
+        </div>
+
+        {haveFiles && !enoughHistory && (
+          <div className="alert alert-warn" style={{marginTop: 12}}>
+            <span className="alert-icon">⚠️</span>
+            <div>
+              <div className="alert-title">Riwayat Anda mungkin kurang</div>
+              Untuk prediksi <strong>{HORIZON_LABELS[horizon].headline}</strong>, sistem ingin
+              riwayat ≥ <strong>{minWeeks} minggu</strong>. Data Anda saat ini hanya
+              <strong> {Math.min(salesData.weeks, expenseData.weeks)} minggu</strong>.
+              Anda masih bisa lanjut, tetapi akurasinya berkurang.
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
+
+// =========================================================================
+// STEP 3 — Cara Menampilkan Hasil (mode + threshold)
+const Step3Mode = ({ mode, setMode, tau, setTau, horizon, thresholds }) => {
+  return (
+    <>
+      <div className="card" style={{marginBottom: 14}}>
+        <div className="card-title">🎯 Bagaimana hasil prediksi ditampilkan?</div>
+        <div className="card-sub">
+          Pilih tingkat detail yang paling mudah Anda baca.
+        </div>
+
+        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginTop: 14}}>
+          <ModeCard
+            selected={mode === '3'} onClick={() => setMode('3')}
+            label="Tiga Tingkat"
+            tag="LEBIH DETAIL"
+            description="Hasil dibagi menjadi tiga kategori: Aman, Waspada, dan Berisiko."
+            preview={[
+              { color: 'var(--safe)', bg: 'var(--safe-bg)', label: 'Aman' },
+              { color: 'var(--warn)', bg: 'var(--warn-bg)', label: 'Waspada' },
+              { color: 'var(--hr)',   bg: 'var(--hr-bg)',   label: 'Berisiko' },
+            ]}
+            note="Cocok untuk pemantauan rutin — bisa membedakan keadaan stabil dan keadaan perlu perhatian."
+          />
+          <ModeCard
+            selected={mode === '2'} onClick={() => setMode('2')}
+            label="Dua Tingkat"
+            tag="LEBIH SEDERHANA"
+            description="Hasil hanya: Aman atau Berisiko. Tanpa zona tengah."
+            preview={[
+              { color: 'var(--safe)', bg: 'var(--safe-bg)', label: 'Aman' },
+              { color: 'var(--hr)',   bg: 'var(--hr-bg)',   label: 'Berisiko' },
+            ]}
+            note="Cocok untuk keputusan cepat ya/tidak. Cepat dibaca tanpa interpretasi tambahan."
+          />
+        </div>
+      </div>
+
+      {/* Auto-tuned & macro integration — both NOT user-configurable */}
+      <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14}}>
+        <div className="alert alert-success" style={{alignItems: 'flex-start'}}>
+          <span className="alert-icon">🎯</span>
+          <div>
+            <div className="alert-title">Kepekaan peringatan sudah disetel otomatis</div>
+            Sistem memakai pengaturan terbaik hasil uji ribuan kombinasi —
+            menyeimbangkan <strong>ketepatan</strong>, <strong>cakupan</strong>, dan
+            <strong> jumlah peringatan keliru</strong>. Anda tidak perlu mengatur apa pun.
+          </div>
+        </div>
+        <div className="alert alert-success" style={{alignItems: 'flex-start'}}>
+          <span className="alert-icon">🌐</span>
+          <div>
+            <div className="alert-title">Data ekonomi nasional sudah disertakan otomatis</div>
+            Setiap prediksi memperhitungkan <strong>inflasi</strong>, <strong>suku bunga BI</strong>,
+            dan <strong>nilai tukar rupiah</strong> di samping data usaha Anda.
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const ModeCard = ({ selected, onClick, label, tag, description, preview, note }) => (
+  <div
+    onClick={onClick}
+    style={{
+      border: `2px solid ${selected ? 'var(--accent)' : 'var(--line-2)'}`,
+      background: selected ? 'rgba(52, 152, 219, 0.04)' : 'white',
+      borderRadius: 'var(--r-lg)', padding: '18px 18px 16px',
+      cursor: 'pointer', transition: 'all .15s', position: 'relative',
+      display: 'flex', flexDirection: 'column', gap: 10,
+    }}
+  >
+    {selected && (
+      <div style={{
+        position: 'absolute', top: 12, right: 12,
+        width: 22, height: 22, borderRadius: '50%',
+        background: 'var(--accent)', color: 'white',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 12, fontWeight: 700,
+      }}>✓</div>
+    )}
+    <div style={{
+      fontSize: 10.5, fontWeight: 700, letterSpacing: '0.07em',
+      color: selected ? 'var(--accent)' : 'var(--ink-4)',
+    }}>{tag}</div>
+    <div style={{fontSize: 20, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.01em'}}>
+      {label}
+    </div>
+    <div style={{display: 'flex', gap: 6, flexWrap: 'wrap'}}>
+      {preview.map((p, i) => (
+        <span key={i} style={{
+          background: p.bg, color: p.color, fontWeight: 700, fontSize: 11.5,
+          padding: '4px 10px', borderRadius: 12, display: 'inline-flex', alignItems: 'center', gap: 5,
+        }}>
+          <span style={{width: 6, height: 6, borderRadius: '50%', background: p.color}}></span>
+          {p.label}
+        </span>
+      ))}
+    </div>
+    <div style={{fontSize: 12.5, color: 'var(--ink-2)', lineHeight: 1.5}}>{description}</div>
+    <div style={{fontSize: 11.5, color: 'var(--ink-4)', lineHeight: 1.5, marginTop: 'auto', fontStyle: 'italic'}}>
+      {note}
+    </div>
+  </div>
+);
+
+// =========================================================================
+// STEP 4 — Konfirmasi & Jalankan
+const Step4Confirm = ({
+  umkmId, umkmName, umkmSector,
+  salesData, expenseData,
+  horizon, mode, tau, horizonStats,
+  horizonHistoryOK, minWeeks,
+  running, pipelineStep, pipelineSteps, runPipeline,
+  predictionDone, setPage, goBack,
+}) => {
+  const totalIn = salesData ? salesData.total : 0;
+  const totalOut = expenseData ? expenseData.total : 0;
+  const weeks = salesData && expenseData ? Math.min(salesData.weeks, expenseData.weeks) : 0;
+
+  return (
+    <>
+      <div className="card" style={{marginBottom: 14}}>
+        <div className="card-title">📋 Periksa Sebelum Jalan</div>
+        <div className="card-sub">
+          Pastikan semuanya sudah benar. Anda bisa kembali ke langkah sebelumnya untuk mengubah.
+        </div>
+
+        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginTop: 14}}>
+          <SummaryBlock title="Usaha Anda" items={[
+            { k: 'Nama', v: umkmName || '—' },
+            { k: 'Kode', v: <span className="mono">{umkmId || '—'}</span> },
+            { k: 'Jenis', v: umkmSector },
+          ]} />
+          <SummaryBlock title="Data yang Dibaca" items={[
+            { k: 'File penjualan', v: salesData ? `${salesData.name} · ${salesData.rows} baris` : '—' },
+            { k: 'File pengeluaran', v: expenseData ? `${expenseData.name} · ${expenseData.rows} baris` : '—' },
+            { k: 'Rentang', v: salesData && expenseData
+              ? <span className="mono" style={{fontSize: 11.5}}>{salesData.minDate} → {salesData.maxDate}</span>
+              : '—' },
+            { k: 'Riwayat', v: `${weeks} minggu` },
+            { k: 'Total uang masuk', v: <span className="mono">Rp {formatShort(totalIn)}</span> },
+            { k: 'Total uang keluar', v: <span className="mono">Rp {formatShort(totalOut)}</span> },
+          ]} />
+          <SummaryBlock title="Pengaturan Prediksi" items={[
+            { k: 'Rentang prediksi', v: <strong>{HORIZON_LABELS[horizon].headline}</strong> },
+            { k: 'Akurasi model', v: `~${Math.round(horizonStats[horizon].macroF1 * 100)}%` },
+            { k: 'Tampilan hasil', v: mode === '3' ? 'Tiga tingkat (Aman / Waspada / Berisiko)' : 'Dua tingkat (Aman / Berisiko)' },
+            { k: 'Kepekaan peringatan', v: 'Otomatis (terbaik)' },
+          ]} />
+          <SummaryBlock title="Otomatis Disertakan" items={[
+            { k: 'Inflasi nasional', v: '✓ Aktif' },
+            { k: 'Suku bunga BI', v: '✓ Aktif' },
+            { k: 'Nilai tukar rupiah', v: '✓ Aktif' },
+          ]} accent="success" />
+        </div>
+
+        {!horizonHistoryOK && (
+          <div className="alert alert-warn" style={{marginTop: 14}}>
+            <span className="alert-icon">⚠️</span>
+            <div>
+              <div className="alert-title">Riwayat di bawah anjuran</div>
+              Untuk rentang prediksi yang dipilih, sistem menganjurkan ≥ <strong>{minWeeks} minggu</strong> data.
+              Anda tetap bisa menjalankan, namun akurasi tidak optimal.
+            </div>
+          </div>
+        )}
+      </div>
+
+      {!running && !predictionDone && (
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 6}}>
+          <button className="btn btn-ghost" onClick={goBack}>← Ubah pengaturan</button>
+          <button className="btn btn-primary" style={{padding: '12px 22px', fontSize: 14}} onClick={runPipeline}>
+            🚀 Jalankan Prediksi Sekarang
+          </button>
+        </div>
+      )}
+
+      {running && (
+        <div className="card" style={{background: 'var(--canvas)', border: '1px dashed var(--accent)'}}>
+          <div className="card-title">⏳ Sedang Menganalisis…</div>
+          <div className="card-sub">
+            Mohon tunggu sebentar. Sistem sedang membaca data dan menjalankan model.
+          </div>
+          <div className="pipeline" style={{marginTop: 10}}>
+            {pipelineSteps.map((stepLabel, i) => {
+              const done = i < pipelineStep;
+              const active = i === pipelineStep;
+              return (
+                <div className="pipeline-row" key={i}>
+                  <span className="pipeline-label">
+                    {done ? '✓ ' : active ? <span className="spinner" style={{marginRight: 6}}></span> : '○ '}
+                    {i + 1}. {stepLabel}
+                  </span>
+                  <div className="pipeline-bar">
+                    <div className="pipeline-fill" style={{width: done ? '100%' : active ? '60%' : '0%'}}/>
+                  </div>
+                  <span className={`pipeline-status ${done ? 'done' : ''}`}>
+                    {done ? 'Selesai' : active ? '...' : 'menunggu'}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {predictionDone && !running && (
+        <div className="alert alert-success" style={{alignItems: 'center', marginTop: 6}}>
+          <span className="alert-icon">✅</span>
+          <div style={{flex: 1}}>
+            <div className="alert-title">Selesai! Laporan Anda sudah siap.</div>
+            Klik tombol di samping untuk melihat hasil prediksi lengkap.
+          </div>
+          <button className="btn btn-accent" onClick={() => setPage('hasil')}>
+            Lihat Laporan →
+          </button>
+        </div>
+      )}
+    </>
+  );
+};
+
+const SummaryBlock = ({ title, items, accent }) => (
+  <div style={{
+    background: accent === 'success' ? 'var(--safe-bg)' : 'var(--canvas)',
+    border: `1px solid ${accent === 'success' ? 'rgba(39,174,96,0.25)' : 'var(--line)'}`,
+    borderRadius: 'var(--r-md)', padding: '14px 16px',
+  }}>
+    <div style={{
+      fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+      color: accent === 'success' ? 'var(--safe)' : 'var(--ink-4)', marginBottom: 8,
+    }}>{title}</div>
+    {items.map((it, i) => (
+      <div className="kv" key={i}>
+        <span className="k">{it.k}</span>
+        <span className="v">{it.v}</span>
+      </div>
+    ))}
+  </div>
+);
+
+// =========================================================================
+// File dropzone with real <input type="file">
+const FileDrop = ({ kind, title, hint, file, error, inputRef, onPick, onDrop, onDragOver, onDragLeave, onRemove }) => {
+  const click = () => inputRef.current && inputRef.current.click();
+  const valueCol = kind === 'sales' ? 'sub_total' : 'total';
+
+  return (
+    <div>
+      <div
+        className={`dropzone ${file ? 'has-file' : ''} ${error ? 'has-error' : ''}`}
+        onClick={click}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+      >
+        <input
+          ref={inputRef} type="file" accept=".csv,text/csv" style={{display: 'none'}}
+          onChange={(e) => {
+            const f = e.target.files && e.target.files[0];
+            if (f) onPick(f);
+          }}
+        />
+        <div className="dropzone-icon">{file ? '📄' : error ? '⚠️' : '⬆️'}</div>
+        <div className="dropzone-title">{file ? file.name : title}</div>
+        <div className="dropzone-hint">
+          {file
+            ? `${file.rows.toLocaleString('id-ID')} baris · ${file.weeks} minggu riwayat · ${formatBytes(file.size)}`
+            : hint}
+        </div>
+        {!file && !error && (
+          <div style={{marginTop: 10, fontSize: 11, color: 'var(--accent)'}}>
+            Klik untuk pilih file · atau seret CSV ke sini
+          </div>
+        )}
+        {file && (
+          <div style={{marginTop: 8, display: 'flex', justifyContent: 'center', gap: 12}}>
+            <span style={{fontSize: 11, color: 'var(--ink-3)'}} className="mono">
+              {file.minDate} → {file.maxDate}
+            </span>
+            <button
+              className="btn-link-danger"
+              onClick={(e) => { e.stopPropagation(); onRemove(); }}
+            >Hapus</button>
+          </div>
+        )}
+      </div>
+      {error && (
+        <div style={{
+          marginTop: 8, fontSize: 12, color: 'var(--hr)', background: 'var(--hr-bg)',
+          padding: '8px 10px', borderRadius: 6, border: '1px solid rgba(231,76,60,0.2)', lineHeight: 1.5,
+        }}>
+          <strong>Tidak bisa diproses:</strong> {error}
+        </div>
+      )}
+      {file && file.badDates + file.badValues > 0 && (
+        <div style={{marginTop: 8, fontSize: 11.5, color: 'var(--warn)', fontStyle: 'italic'}}>
+          ⚠️ {file.badDates} baris dengan tanggal invalid, {file.badValues} baris dengan {valueCol} invalid dilewati.
+        </div>
+      )}
+    </div>
+  );
+};
+
+// =========================================================================
+const FilePreview = ({ salesData, expenseData, datesOverlap }) => {
+  const clr = expenseData.total > 0 ? salesData.total / expenseData.total : 0;
+  return (
+    <>
+      <div style={{marginTop: 16, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10}}>
+        <MiniStat label="Total Uang Masuk" value={`Rp ${formatShort(salesData.total)}`} hint={`${salesData.rows} transaksi`} />
+        <MiniStat label="Total Uang Keluar" value={`Rp ${formatShort(expenseData.total)}`} hint={`${expenseData.rows} transaksi`} />
+        <MiniStat
+          label="Rasio Arus Kas"
+          value={clr.toFixed(2)}
+          hint={clr > 1 ? 'Surplus (uang masuk > keluar)' : 'Defisit (perlu perhatian)'}
+          tone={clr > 1 ? 'safe' : 'warn'}
+        />
+        <MiniStat
+          label="Riwayat Terkumpul"
+          value={`${Math.min(salesData.weeks, expenseData.weeks)} mgg`}
+          hint="dipakai untuk prediksi"
+        />
+      </div>
+
+      <div style={{marginTop: 14}}>
+        <div style={{fontSize: 11.5, color: 'var(--ink-3)', fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 6}}>
+          Cuplikan {salesData.name}
+        </div>
+        <PreviewTable headers={['tanggal', 'jumlah penjualan']} rows={salesData.preview} />
+      </div>
+      <div style={{marginTop: 12}}>
+        <div style={{fontSize: 11.5, color: 'var(--ink-3)', fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 6}}>
+          Cuplikan {expenseData.name}
+        </div>
+        <PreviewTable headers={['tanggal', 'jumlah pengeluaran']} rows={expenseData.preview} />
+      </div>
+
+      {!datesOverlap && (
+        <div className="alert alert-error" style={{marginTop: 14}}>
+          <span className="alert-icon">❌</span>
+          <div>
+            <div className="alert-title">Rentang tanggal tidak cocok</div>
+            Penjualan: {salesData.minDate} → {salesData.maxDate}<br/>
+            Pengeluaran: {expenseData.minDate} → {expenseData.maxDate}<br/>
+            Tidak ada minggu yang sama antara keduanya. Periksa kembali file Anda.
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+const PreviewTable = ({ headers, rows }) => (
+  <div className="table-wrap">
+    <table className="data">
+      <thead><tr>{headers.map(h => <th key={h}>{h}</th>)}</tr></thead>
+      <tbody>
+        {rows.map((r, i) => (
+          <tr key={i}>
+            <td className="mono">{r.date}</td>
+            <td className="mono" style={{textAlign: 'right'}}>Rp {r.value.toLocaleString('id-ID')}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
+const MiniStat = ({ label, value, hint, tone }) => (
+  <div style={{
+    background: tone === 'safe' ? 'var(--safe-bg)' : tone === 'warn' ? 'var(--warn-bg)' : 'white',
+    border: `1px solid ${tone === 'safe' ? 'rgba(39,174,96,0.25)' : tone === 'warn' ? 'rgba(243,156,18,0.3)' : 'var(--line)'}`,
+    borderRadius: 8, padding: '10px 12px',
+  }}>
+    <div style={{fontSize: 10.5, fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--ink-4)'}}>
+      {label}
+    </div>
+    <div style={{fontSize: 16, fontWeight: 700, color: 'var(--ink)', marginTop: 2, fontVariantNumeric: 'tabular-nums'}}>
+      {value}
+    </div>
+    <div style={{fontSize: 10.5, color: 'var(--ink-3)', marginTop: 1}}>{hint}</div>
+  </div>
+);
+
+// =========================================================================
+const FormatTab = () => {
+  const sampleSales = [
+    { date: '2025-01-06', sub_total: 1_450_000 },
+    { date: '2025-01-07', sub_total: 1_620_000 },
+    { date: '2025-01-08', sub_total: 980_000 },
+    { date: '2025-01-09', sub_total: 2_100_000 },
+  ];
+  const sampleExpense = [
+    { date: '2025-01-06', total: 720_000 },
+    { date: '2025-01-07', total: 850_000 },
+    { date: '2025-01-08', total: 410_000 },
+    { date: '2025-01-09', total: 1_200_000 },
+  ];
+
+  const download = (kind) => {
+    triggerDownload(`template_${kind}.csv`, buildTemplate(kind));
+  };
+
+  return (
+    <div>
+      <div className="alert alert-info" style={{marginBottom: 14}}>
+        <span className="alert-icon">📌</span>
+        <div>
+          <div className="alert-title">Format yang dipakai</div>
+          Tiap file CSV berisi <strong>satu usaha saja</strong>. Hanya dua kolom: <span className="mono">date</span>
+          (tanggal) dan kolom nilai (<span className="mono">sub_total</span> untuk penjualan,
+          atau <span className="mono">total</span> untuk pengeluaran).
+        </div>
+      </div>
+
+      <div className="grid-2">
+        <div>
+          <div className="field-label">📥 Penjualan (Uang Masuk)</div>
+          <div className="table-wrap">
+            <table className="data">
+              <thead><tr><th>date</th><th>sub_total</th></tr></thead>
+              <tbody>
+                {sampleSales.map((r, i) => (
+                  <tr key={i}>
+                    <td className="mono">{r.date}</td>
+                    <td className="mono" style={{textAlign:'right'}}>{r.sub_total.toLocaleString('en-US')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <button className="btn btn-accent" style={{marginTop: 10}} onClick={() => download('sales')}>
+            📥 Unduh contoh template
+          </button>
+        </div>
+        <div>
+          <div className="field-label">📤 Pengeluaran (Uang Keluar)</div>
+          <div className="table-wrap">
+            <table className="data">
+              <thead><tr><th>date</th><th>total</th></tr></thead>
+              <tbody>
+                {sampleExpense.map((r, i) => (
+                  <tr key={i}>
+                    <td className="mono">{r.date}</td>
+                    <td className="mono" style={{textAlign:'right'}}>{r.total.toLocaleString('en-US')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <button className="btn btn-accent" style={{marginTop: 10}} onClick={() => download('expense')}>
+            📥 Unduh contoh template
+          </button>
+        </div>
+      </div>
+
+      <div className="alert alert-info" style={{marginTop: 16}}>
+        <span className="alert-icon">ℹ️</span>
+        <div>
+          <div className="alert-title">Tips pengisian</div>
+          <ul style={{margin: '4px 0 0 16px', padding: 0, fontSize: 12, lineHeight: 1.6}}>
+            <li>Tanggal harus <span className="mono">YYYY-MM-DD</span> (contoh: 2025-01-06).</li>
+            <li>Nilai cukup angka saja, tanpa <span className="mono">Rp</span>, titik, atau koma (contoh: 1450000).</li>
+            <li>Baris yang tanggal/nilainya tidak valid akan otomatis dilewati.</li>
+            <li>Sistem akan mengelompokkan transaksi ke level mingguan secara otomatis.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ----- helpers -----
+const formatBytes = (b) => {
+  if (b < 1024) return `${b} B`;
+  if (b < 1024 * 1024) return `${(b / 1024).toFixed(1)} KB`;
+  return `${(b / 1024 / 1024).toFixed(2)} MB`;
+};
+
+const formatShort = (n) => {
+  if (n >= 1e9) return `${(n / 1e9).toFixed(2)} Mlr`;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(2)} Jt`;
+  if (n >= 1e3) return `${(n / 1e3).toFixed(1)} Rb`;
+  return String(Math.round(n));
+};
+
+window.InputPage = InputPage;
+
+  </script>
+  <script type="text/babel" data-presets="react">
+// Halaman Hasil Prediksi — laporan untuk pemilik UMKM (bahasa awam)
+const ResultsPage = ({ setPage, predictionDone, prediction, submittedUMKM, umkmList, peerList, thresholds, q25q75, setSelectedUMKM }) => {
+  const gaugeRef = React.useRef(null);
+  const peerBarRef = React.useRef(null);
+  const clrMiniRef = React.useRef(null);
+
+  if (!predictionDone || !submittedUMKM) {
+    return (
+      <div className="content">
+        <div className="page-header">
+          <h1 className="page-title">📊 Laporan Saya</h1>
+        </div>
+        <div className="card">
+          <div className="empty-state">
+            <div className="empty-state-icon">📭</div>
+            <h3>Belum ada laporan</h3>
+            <p>Mulai prediksi baru untuk melihat hasil di sini.</p>
+            <button className="btn btn-primary" onClick={() => setPage('input')}>← Mulai Prediksi Baru</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const horizon = prediction.horizon;
+  const tau = prediction.tau;
+  const qs = q25q75[horizon];
+  const u = submittedUMKM;
+  const isHR = u.prob >= tau;
+
+  // Friendly labels
+  const horizonLabel = horizon === 4 ? '1 bulan' : horizon === 12 ? '3 bulan' : '6 bulan';
+  const cashHealthLabel = u.clrLast < qs.q25 ? 'Tipis' : u.clrLast > qs.q75 ? 'Sehat' : 'Sedang';
+  const cashHealthColor = u.clrLast < qs.q25 ? 'var(--hr)' : u.clrLast > qs.q75 ? 'var(--safe)' : 'var(--warn)';
+  const trendLabel = u.tren === 'up' ? 'Menaik' : u.tren === 'down' ? 'Menurun' : 'Stabil';
+  const trendIcon = u.tren === 'up' ? '📈' : u.tren === 'down' ? '📉' : '➡️';
+  const trendColor = u.tren === 'up' ? 'var(--safe)' : u.tren === 'down' ? 'var(--hr)' : 'var(--ink-3)';
+
+  // Peer ranking
+  const peerWithSelf = [...peerList.map(p => ({ ...p, _self: false })), { ...u, _self: true }];
+  const sorted = [...peerWithSelf].sort((a, b) => b.prob - a.prob);
+  const rank = sorted.findIndex(x => x._self) + 1;
+  const peerHR = peerList.filter(p => p.prob >= tau).length;
+  const peerSafe = peerList.length - peerHR;
+
+  // ===== Gauge (friendly) =====
+  React.useEffect(() => {
+    if (!gaugeRef.current) return;
+    Plotly.react(gaugeRef.current, [{
+      type: 'indicator',
+      mode: 'gauge+number',
+      value: u.prob * 100,
+      number: { suffix: '%', valueformat: '.0f', font: { size: 36, family: 'Inter', color: '#2C3E50' } },
+      gauge: {
+        axis: {
+          range: [0, 100], tickwidth: 0, tickcolor: 'transparent',
+          tickvals: [0, 50, 100], ticktext: ['Aman', '', 'Berisiko'],
+          tickfont: { size: 10, family: 'Inter', color: '#5D6D7E' },
+        },
+        bar: { color: isHR ? '#E74C3C' : '#27AE60', thickness: 0.3 },
+        bgcolor: 'white', borderwidth: 1, bordercolor: '#ECF0F1',
+        steps: [
+          { range: [0, 30], color: 'rgba(39, 174, 96, 0.15)' },
+          { range: [30, 60], color: 'rgba(243, 156, 18, 0.18)' },
+          { range: [60, 100], color: 'rgba(231, 76, 60, 0.18)' },
+        ],
+      },
+    }], {
+      height: 200,
+      margin: { l: 30, r: 30, t: 30, b: 10 },
+      font: { family: 'Inter' },
+      paper_bgcolor: 'rgba(0,0,0,0)',
+    }, { displayModeBar: false, responsive: true });
+  }, [u, tau, isHR]);
+
+  // ===== Mini timeline (kesehatan kas mingguan) =====
+  React.useEffect(() => {
+    if (!clrMiniRef.current) return;
+    const weeks = u.clrSeries.map((_, i) => i + 1);
+    Plotly.react(clrMiniRef.current, [
+      // Batas waspada
+      { type: 'scatter', x: [weeks[0], weeks[weeks.length - 1]], y: [qs.q25, qs.q25],
+        mode: 'lines', line: { color: '#E74C3C', width: 1, dash: 'dash' },
+        name: 'Batas waspada', hoverinfo: 'skip' },
+      // Batas aman
+      { type: 'scatter', x: [weeks[0], weeks[weeks.length - 1]], y: [qs.q75, qs.q75],
+        mode: 'lines', line: { color: '#27AE60', width: 1, dash: 'dash' },
+        name: 'Batas aman', hoverinfo: 'skip' },
+      // Aktual
+      { type: 'scatter', x: weeks, y: u.clrSeries, mode: 'lines+markers',
+        name: 'Kesehatan kas Anda', line: { color: '#2C3E50', width: 2 },
+        marker: { size: 5, color: '#2C3E50' },
+        hovertemplate: 'Minggu ke-%{x}<br>Rasio kas: <b>%{y:.2f}</b><extra></extra>' },
+    ], {
+      template: 'plotly_white',
+      xaxis: { title: { text: 'Minggu ke-', font: { size: 10, color: '#5D6D7E' } }, gridcolor: '#ECF0F1', tickfont: { size: 10 } },
+      yaxis: { title: { text: 'Rasio uang masuk ÷ keluar', font: { size: 10, color: '#5D6D7E' } }, gridcolor: '#ECF0F1', tickfont: { size: 10 } },
+      margin: { l: 50, r: 16, t: 10, b: 40 },
+      height: 200, showlegend: false,
+      font: { family: 'Inter' },
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: 'rgba(0,0,0,0)',
+    }, { displayModeBar: false, responsive: true });
+  }, [u, qs]);
+
+  // ===== Distribusi skor risiko (anonim, tanpa nama usaha lain) =====
+  React.useEffect(() => {
+    if (!peerBarRef.current) return;
+    // Bucket peer scores into 10 bins (0-10%, 10-20%, ..., 90-100%)
+    const bins = Array(10).fill(0);
+    peerList.forEach(p => {
+      const b = Math.min(9, Math.floor(p.prob * 10));
+      bins[b]++;
+    });
+    const binLabels = bins.map((_, i) => `${i * 10}–${(i + 1) * 10}%`);
+    const userBin = Math.min(9, Math.floor(u.prob * 10));
+
+    Plotly.react(peerBarRef.current, [
+      // Histogram of all peers (anonymous)
+      {
+        type: 'bar',
+        x: binLabels,
+        y: bins,
+        marker: {
+          color: binLabels.map((_, i) => i < 3 ? '#27AE60' : i < 6 ? '#F39C12' : '#E74C3C'),
+          opacity: binLabels.map((_, i) => i === userBin ? 1 : 0.35),
+          line: {
+            color: binLabels.map((_, i) => i === userBin ? '#1F6FA8' : 'transparent'),
+            width: binLabels.map((_, i) => i === userBin ? 3 : 0),
+          },
+        },
+        text: bins.map(c => c > 0 ? `${c} usaha` : ''),
+        textposition: 'inside',
+        textfont: { size: 11, color: 'white', family: 'Inter' },
+        hovertemplate: 'Skor %{x}<br>%{y} usaha<extra></extra>',
+        showlegend: false,
+      },
+    ], {
+      template: 'plotly_white',
+      xaxis: {
+        title: { text: 'Skor risiko (semakin ke kanan, semakin berisiko)', font: { size: 11, color: '#5D6D7E' } },
+        gridcolor: '#ECF0F1', tickfont: { size: 11, family: 'Inter' },
+      },
+      yaxis: {
+        title: { text: 'Jumlah usaha', font: { size: 11, color: '#5D6D7E' } },
+        gridcolor: '#ECF0F1', tickfont: { size: 10 },
+      },
+      shapes: [{
+        type: 'line', xref: 'x', yref: 'paper',
+        x0: userBin, x1: userBin, y0: 0, y1: 0.85,
+        line: { color: '#1F6FA8', width: 3, dash: 'solid' },
+      }],
+      annotations: [{
+        x: userBin, y: 0.95, xref: 'x', yref: 'paper',
+        text: `<b>↓ Anda di sini</b><br>${(u.prob * 100).toFixed(0)}%`,
+        showarrow: false,
+        font: { color: '#1F6FA8', size: 12, family: 'Inter' },
+        bgcolor: 'white', bordercolor: '#1F6FA8', borderwidth: 1.5, borderpad: 6,
+      }],
+      margin: { l: 60, r: 30, t: 50, b: 50 },
+      height: 320,
+      font: { family: 'Inter' },
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: 'rgba(0,0,0,0)',
+      bargap: 0.15,
+    }, { displayModeBar: false, responsive: true });
+  }, [peerList, u, tau]);
+
+  const downloadReport = () => {
+    const lines = [
+      'keterangan,nilai',
+      `nama_usaha,"${u.nama}"`,
+      `kode_usaha,${u.id}`,
+      `jenis_usaha,${u.sektor}`,
+      `rentang_prediksi,${horizonLabel}`,
+      `status,${isHR ? 'BERISIKO' : 'AMAN'}`,
+      `skor_risiko_persen,${(u.prob * 100).toFixed(0)}`,
+      `kesehatan_kas,${cashHealthLabel}`,
+      `tren_4_minggu,${trendLabel}`,
+      `total_uang_masuk,${u.totalInflow}`,
+      `total_uang_keluar,${u.totalOutflow}`,
+      `riwayat_minggu,${u.weeks}`,
+      `rentang_data,"${u.dateRange}"`,
+      `peringkat_vs_lainnya,"${rank} dari ${sorted.length}"`,
+      `tanggal_laporan,${u.submittedAt}`,
+    ];
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `laporan_${u.id}_${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  };
+
+  return (
+    <div className="content">
+      <div className="page-header" style={{display:'flex', justifyContent:'space-between', alignItems:'flex-end', flexWrap: 'wrap', gap: 10}}>
+        <div>
+          <div className="page-eyebrow">Laporan Prediksi · {horizonLabel} ke depan</div>
+          <h1 className="page-title">{u.nama}</h1>
+          <p className="page-sub">
+            {u.sektor} · {u.weeks} minggu riwayat ({u.dateRange})
+          </p>
+        </div>
+        <div style={{display: 'flex', gap: 8}}>
+          <button className="btn btn-ghost" onClick={() => setPage('input')}>← Prediksi Usaha Lain</button>
+          <button className="btn btn-accent" onClick={downloadReport}>📥 Unduh Laporan</button>
+        </div>
+      </div>
+
+      {/* Hero verdict */}
+      <div className={`verdict-hero ${isHR ? 'verdict-hr' : 'verdict-safe'}`}>
+        <div className="verdict-left">
+          <div className="verdict-badge">
+            <span className="dotmark"></span>
+            {isHR ? 'BERISIKO' : 'AMAN'}
+          </div>
+          <h2 className="verdict-headline">
+            {isHR
+              ? <>Usaha Anda <strong>berpotensi mengalami kesulitan arus kas</strong> dalam {horizonLabel} ke depan.</>
+              : <>Usaha Anda <strong>diperkirakan aman</strong> dalam {horizonLabel} ke depan.</>}
+          </h2>
+          <p className="verdict-sub">
+            {isHR
+              ? 'Pola arus kas Anda mirip dengan usaha-usaha yang pernah mengalami masalah likuiditas. Sebaiknya ambil tindakan pencegahan sejak sekarang.'
+              : 'Pola arus kas Anda menunjukkan kondisi yang sehat. Pertahankan kebiasaan baik ini dan pantau secara berkala.'}
+          </p>
+          <div className="verdict-stats">
+            <div className="vstat">
+              <div className="vstat-label">Kesehatan Kas</div>
+              <div className="vstat-value" style={{color: cashHealthColor}}>{cashHealthLabel}</div>
+              <div className="vstat-hint">Berdasarkan rasio terakhir</div>
+            </div>
+            <div className="vstat">
+              <div className="vstat-label">Tren 4 Minggu</div>
+              <div className="vstat-value" style={{color: trendColor}}>
+                <span style={{fontSize: 16, marginRight: 4}}>{trendIcon}</span>
+                {trendLabel}
+              </div>
+              <div className="vstat-hint">
+                {u.tren === 'up' ? 'Arah membaik' : u.tren === 'down' ? 'Perlu perhatian' : 'Tidak banyak berubah'}
+              </div>
+            </div>
+            <div className="vstat">
+              <div className="vstat-label">Posisi vs Usaha Lain</div>
+              <div className="vstat-value mono">{rank} / {sorted.length}</div>
+              <div className="vstat-hint">Paling berisiko ke-{rank}</div>
+            </div>
+            <div className="vstat">
+              <div className="vstat-label">Uang Masuk vs Keluar</div>
+              <div className="vstat-value mono" style={{fontSize: 19}}>
+                {(u.totalInflow / u.totalOutflow).toFixed(2)}×
+              </div>
+              <div className="vstat-hint">Selama {u.weeks} minggu</div>
+            </div>
+          </div>
+        </div>
+        <div className="verdict-right">
+          <div className="vstat-label" style={{textAlign: 'center'}}>Skor Risiko</div>
+          <div ref={gaugeRef}></div>
+          <div style={{textAlign: 'center', fontSize: 11.5, color: 'var(--ink-3)', marginTop: 4, lineHeight: 1.5}}>
+            Semakin tinggi angkanya,<br/>semakin perlu diwaspadai.
+          </div>
+        </div>
+      </div>
+
+      {/* Trend + Action grid */}
+      <div className="grid-2" style={{margin: '18px 0'}}>
+        <div className="card">
+          <div className="card-title">📈 Kesehatan Kas Anda Tiap Minggu</div>
+          <div className="card-sub">
+            Garis tebal = catatan Anda. <span style={{color: 'var(--hr)'}}>Garis merah</span> = batas waspada,
+            <span style={{color: 'var(--safe)'}}> garis hijau</span> = batas aman.
+          </div>
+          <div ref={clrMiniRef}></div>
+        </div>
+        <div className="card">
+          <div className="card-title">🎯 Yang Sebaiknya Anda Lakukan</div>
+          <div className="card-sub">Saran berdasarkan kondisi usaha Anda saat ini.</div>
+          <div style={{marginTop: 10}}>
+            {isHR ? (
+              <ul style={{margin: 0, paddingLeft: 18, fontSize: 13, color: 'var(--ink-2)', lineHeight: 1.8}}>
+                <li><strong>Tagih piutang Anda</strong> — hubungi pelanggan yang belum bayar untuk mempercepat uang masuk.</li>
+                <li><strong>Kurangi pengeluaran tidak mendesak</strong> dalam {horizonLabel} ke depan.</li>
+                <li><strong>Negosiasi dengan pemasok</strong> — minta tempo pembayaran lebih panjang bila memungkinkan.</li>
+                <li>Buka <strong>Analisis Mendalam</strong> untuk memahami penyebab utama prediksi ini.</li>
+              </ul>
+            ) : (
+              <ul style={{margin: 0, paddingLeft: 18, fontSize: 13, color: 'var(--ink-2)', lineHeight: 1.8}}>
+                <li><strong>Pertahankan kebiasaan baik</strong> — jaga pemasukan agar tetap stabil seperti sekarang.</li>
+                <li>Gunakan kondisi sehat ini untuk <strong>menambah stok</strong> atau berinvestasi pada usaha.</li>
+                <li><strong>Periksa kembali setiap bulan</strong> agar perubahan kecil bisa segera terdeteksi.</li>
+                <li>Buka <strong>Analisis Mendalam</strong> untuk melihat detail kondisi usaha Anda.</li>
+              </ul>
+            )}
+            <button
+              className="btn btn-primary"
+              style={{marginTop: 16}}
+              onClick={() => { setSelectedUMKM(u.id); setPage('detail'); }}
+            >
+              🔍 Lihat Analisis Mendalam →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Distribusi anonim — privasi: tidak ada nama atau detail usaha lain */}
+      <div className="card flush" style={{marginBottom: 18}}>
+        <div style={{padding: '18px 20px 6px'}}>
+          <div className="card-title">📊 Sebaran Skor Risiko Semua Usaha</div>
+          <div className="card-sub">
+            Untuk menjaga privasi, kami hanya menampilkan <strong>jumlah usaha</strong> per rentang skor —
+            tanpa nama, tanpa identitas. Garis biru menunjukkan posisi Anda dalam sebaran ini.
+          </div>
+        </div>
+        <div style={{padding: '0 12px 12px'}}>
+          <div ref={peerBarRef}></div>
+        </div>
+        <div style={{
+          padding: '12px 20px 18px', borderTop: '1px dashed var(--line)',
+          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14,
+        }}>
+          <PeerStat
+            label="Total usaha pembanding"
+            value={peerList.length}
+            hint="Riwayat anonim"
+          />
+          <PeerStat
+            label="Yang termasuk berisiko"
+            value={`${peerHR} dari ${peerList.length}`}
+            hint={`${Math.round(peerHR / peerList.length * 100)}% dari total`}
+            tone="hr"
+          />
+          <PeerStat
+            label="Skor Anda lebih tinggi dari"
+            value={`${Math.round((peerList.filter(p => p.prob < u.prob).length / peerList.length) * 100)}%`}
+            hint="usaha lain dalam sebaran"
+            tone={u.prob >= tau ? 'hr' : 'safe'}
+          />
+        </div>
+      </div>
+
+      <div className="disclaimer">
+        <strong>⚠️ Catatan:</strong> Laporan ini bersifat indikatif dan dimaksudkan untuk membantu pengambilan
+        keputusan, bukan menggantikannya. Konsultasikan dengan penasihat keuangan untuk keputusan besar.
+      </div>
+    </div>
+  );
+};
+
+const PeerStat = ({ label, value, hint, tone }) => (
+  <div style={{
+    background: tone === 'hr' ? 'var(--hr-bg)' : tone === 'safe' ? 'var(--safe-bg)' : 'var(--canvas)',
+    border: `1px solid ${tone === 'hr' ? 'rgba(231,76,60,0.25)' : tone === 'safe' ? 'rgba(39,174,96,0.25)' : 'var(--line)'}`,
+    borderRadius: 'var(--r-md)', padding: '12px 14px',
+  }}>
+    <div style={{
+      fontSize: 10.5, fontWeight: 600, letterSpacing: '0.05em',
+      textTransform: 'uppercase', color: 'var(--ink-4)',
+    }}>{label}</div>
+    <div style={{
+      fontSize: 22, fontWeight: 700, marginTop: 4,
+      color: tone === 'hr' ? 'var(--hr)' : tone === 'safe' ? 'var(--safe)' : 'var(--ink)',
+      fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.01em',
+    }}>{value}</div>
+    <div style={{fontSize: 11, color: 'var(--ink-3)', marginTop: 2}}>{hint}</div>
+  </div>
+);
+
+window.ResultsPage = ResultsPage;
+
+  </script>
+  <script type="text/babel" data-presets="react">
+// Analisis Mendalam — detail usaha untuk pemilik UMKM (bahasa awam, tanpa feature importance)
+const DetailPage = ({ setPage, predictionDone, prediction, umkmList, selectedUMKM, setSelectedUMKM, q25q75 }) => {
+  const tsRef = React.useRef(null);
+  const gaugeRef = React.useRef(null);
+
+  if (!predictionDone) {
+    return (
+      <div className="content">
+        <div className="page-header">
+          <h1 className="page-title">🔍 Analisis Mendalam</h1>
+        </div>
+        <div className="card">
+          <div className="empty-state">
+            <div className="empty-state-icon">🔍</div>
+            <h3>Belum ada laporan untuk dianalisis</h3>
+            <p>Jalankan prediksi terlebih dahulu untuk melihat analisis mendalam usaha Anda.</p>
+            <button className="btn btn-primary" onClick={() => setPage('input')}>← Mulai Prediksi</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const horizon = prediction.horizon;
+  const tau = prediction.tau;
+  const qs = q25q75[horizon];
+  const umkm = umkmList.find(u => u.id === selectedUMKM) || umkmList[0];
+  const isHR = umkm.prob >= tau;
+  const horizonLabel = horizon === 4 ? '1 bulan' : horizon === 12 ? '3 bulan' : '6 bulan';
+
+  // Friendly labels for last reading
+  const cashHealthLabel = umkm.clrLast < qs.q25 ? 'Tipis' : umkm.clrLast > qs.q75 ? 'Sehat' : 'Sedang';
+  const cashHealthColor = umkm.clrLast < qs.q25 ? 'var(--hr)' : umkm.clrLast > qs.q75 ? 'var(--safe)' : 'var(--warn)';
+  const trendLabel = umkm.tren === 'up' ? 'Menaik' : umkm.tren === 'down' ? 'Menurun' : 'Stabil';
+  const trendIcon = umkm.tren === 'up' ? '📈' : umkm.tren === 'down' ? '📉' : '➡️';
+  const trendColor = umkm.tren === 'up' ? 'var(--safe)' : umkm.tren === 'down' ? 'var(--hr)' : 'var(--ink-3)';
+
+  // Plain-language "factors" — what nudged the prediction
+  const recent = umkm.clrSeries.slice(-4);
+  const mean4 = recent.reduce((a, b) => a + b, 0) / recent.length;
+  const factors = [];
+  // Cash health
+  if (umkm.clrLast < qs.q25) {
+    factors.push({
+      icon: '🔴', tone: 'hr',
+      title: 'Rasio arus kas terakhir di bawah batas waspada',
+      detail: `Minggu terakhir, untuk setiap Rp 1 yang keluar hanya Rp ${umkm.clrLast.toFixed(2)} yang masuk. Idealnya di atas Rp ${qs.q75.toFixed(2)}.`,
+    });
+  } else if (umkm.clrLast > qs.q75) {
+    factors.push({
+      icon: '🟢', tone: 'safe',
+      title: 'Rasio arus kas terakhir sehat',
+      detail: `Minggu terakhir, untuk setiap Rp 1 yang keluar ada Rp ${umkm.clrLast.toFixed(2)} yang masuk — di atas batas aman.`,
+    });
+  } else {
+    factors.push({
+      icon: '🟡', tone: 'warn',
+      title: 'Rasio arus kas berada di zona sedang',
+      detail: `Tidak terlalu tipis, tetapi juga belum benar-benar sehat (Rp ${umkm.clrLast.toFixed(2)} masuk per Rp 1 keluar). Pantau terus.`,
+    });
+  }
+  // Trend
+  if (umkm.tren === 'down') {
+    factors.push({
+      icon: '📉', tone: 'hr',
+      title: 'Tren menurun dalam 4 minggu terakhir',
+      detail: 'Rasio arus kas Anda terus berkurang sedikit demi sedikit. Pola seperti ini berisiko menjadi defisit bila tidak ditangani.',
+    });
+  } else if (umkm.tren === 'up') {
+    factors.push({
+      icon: '📈', tone: 'safe',
+      title: 'Tren membaik dalam 4 minggu terakhir',
+      detail: 'Rasio arus kas Anda terus naik — pertanda usaha sedang menguat.',
+    });
+  } else {
+    factors.push({
+      icon: '➡️', tone: 'neutral',
+      title: 'Pergerakan stabil dalam 4 minggu terakhir',
+      detail: 'Tidak ada perubahan besar pada rasio arus kas Anda. Sistem melihat ini sebagai kondisi yang tidak banyak bergejolak.',
+    });
+  }
+  // 4-week average vs caution band
+  if (mean4 < qs.q25 * 1.2) {
+    factors.push({
+      icon: '⚠️', tone: 'warn',
+      title: 'Rata-rata 4 minggu dekat dengan zona waspada',
+      detail: `Rata-rata rasio Anda selama bulan terakhir (Rp ${mean4.toFixed(2)}) mendekati batas yang sebaiknya tidak dilewati.`,
+    });
+  }
+  // Macro context — always mention
+  factors.push({
+    icon: '🌐', tone: 'neutral',
+    title: 'Kondisi ekonomi nasional sudah diperhitungkan',
+    detail: 'Sistem juga melihat inflasi, suku bunga BI, dan nilai tukar rupiah saat ini — semua itu otomatis ikut menentukan prediksi.',
+  });
+
+  // ===== Time-series chart =====
+  React.useEffect(() => {
+    if (!tsRef.current) return;
+    const weeks = umkm.clrSeries.map((_, i) => i + 1);
+    const predWeek = weeks[weeks.length - 1] + horizon;
+
+    Plotly.react(tsRef.current, [
+      // Background bands (HR, Moderate, Safe)
+      { type: 'scatter', x: [weeks[0], predWeek], y: [qs.q25, qs.q25], mode: 'lines',
+        line: { color: 'rgba(0,0,0,0)' }, fill: 'tozeroy', fillcolor: 'rgba(231, 76, 60, 0.08)',
+        showlegend: false, hoverinfo: 'skip' },
+      { type: 'scatter', x: [weeks[0], predWeek], y: [qs.q75, qs.q75], mode: 'lines',
+        line: { color: 'rgba(0,0,0,0)' }, fill: 'tonexty', fillcolor: 'rgba(243, 156, 18, 0.07)',
+        showlegend: false, hoverinfo: 'skip' },
+      { type: 'scatter', x: [weeks[0], predWeek], y: [3.5, 3.5], mode: 'lines',
+        line: { color: 'rgba(0,0,0,0)' }, fill: 'tonexty', fillcolor: 'rgba(39, 174, 96, 0.07)',
+        showlegend: false, hoverinfo: 'skip' },
+      // Threshold lines
+      { type: 'scatter', x: [weeks[0], predWeek], y: [qs.q25, qs.q25], mode: 'lines',
+        name: 'Batas waspada',
+        line: { color: '#E74C3C', width: 1.5, dash: 'dash' }, hoverinfo: 'skip' },
+      { type: 'scatter', x: [weeks[0], predWeek], y: [qs.q75, qs.q75], mode: 'lines',
+        name: 'Batas aman',
+        line: { color: '#27AE60', width: 1.5, dash: 'dash' }, hoverinfo: 'skip' },
+      // Actual line
+      { type: 'scatter', x: weeks, y: umkm.clrSeries, mode: 'lines+markers',
+        name: 'Catatan Anda',
+        line: { color: '#2C3E50', width: 2.5 },
+        marker: { size: 6, color: '#2C3E50' },
+        hovertemplate: 'Minggu ke-%{x}<br>Rasio kas: <b>%{y:.2f}</b><extra></extra>',
+      },
+      // Prediction marker
+      { type: 'scatter', x: [predWeek], y: [umkm.clrSeries[umkm.clrSeries.length - 1]], mode: 'markers',
+        name: `Prediksi ${horizonLabel}`,
+        marker: { size: 16, color: isHR ? '#E74C3C' : '#27AE60', symbol: 'diamond',
+                  line: { color: 'white', width: 2 } },
+        hovertemplate: `Prediksi ${horizonLabel}: <b>${isHR ? 'BERISIKO' : 'AMAN'}</b><br>Skor: ${(umkm.prob*100).toFixed(0)}%<extra></extra>`,
+      },
+    ], {
+      template: 'plotly_white',
+      xaxis: { title: { text: 'Minggu ke-', font: { size: 11, color: '#5D6D7E' } }, gridcolor: '#ECF0F1' },
+      yaxis: { title: { text: 'Rasio uang masuk ÷ keluar', font: { size: 11, color: '#5D6D7E' } },
+               gridcolor: '#ECF0F1', range: [0, 3.5] },
+      legend: { orientation: 'h', y: 1.12, font: { family: 'Inter', size: 11 } },
+      margin: { l: 60, r: 30, t: 30, b: 40 },
+      height: 340,
+      font: { family: 'Inter' },
+      shapes: [{
+        type: 'rect', x0: weeks[weeks.length - 1], x1: predWeek, y0: 0, y1: 3.5,
+        line: { width: 0 }, fillcolor: 'rgba(52, 152, 219, 0.04)', layer: 'below',
+      }],
+      annotations: [{
+        x: predWeek, y: umkm.clrSeries[umkm.clrSeries.length - 1] + 0.4, xref: 'x', yref: 'y',
+        text: `<b>${horizonLabel} ke depan</b><br>${isHR ? 'Berisiko' : 'Aman'} · ${(umkm.prob*100).toFixed(0)}%`,
+        showarrow: true, arrowhead: 0, ax: -10, ay: -30,
+        font: { color: isHR ? '#E74C3C' : '#27AE60', size: 11, family: 'Inter' },
+        bgcolor: 'white', bordercolor: isHR ? '#E74C3C' : '#27AE60', borderwidth: 1, borderpad: 4,
+      }],
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: 'rgba(0,0,0,0)',
+    }, { displayModeBar: false, responsive: true });
+  }, [umkm, horizon, tau, isHR, qs, horizonLabel]);
+
+  // ===== Gauge =====
+  React.useEffect(() => {
+    if (!gaugeRef.current) return;
+    Plotly.react(gaugeRef.current, [{
+      type: 'indicator', mode: 'gauge+number',
+      value: umkm.prob * 100,
+      number: { suffix: '%', valueformat: '.0f', font: { size: 24, family: 'Inter', color: '#2C3E50' } },
+      gauge: {
+        axis: { range: [0, 100], tickwidth: 0, tickvals: [0, 50, 100],
+                ticktext: ['Aman', '', 'Berisiko'], tickfont: { size: 9 } },
+        bar: { color: isHR ? '#E74C3C' : '#27AE60', thickness: 0.28 },
+        bgcolor: 'white', borderwidth: 1, bordercolor: '#ECF0F1',
+        steps: [
+          { range: [0, 30], color: 'rgba(39, 174, 96, 0.15)' },
+          { range: [30, 60], color: 'rgba(243, 156, 18, 0.18)' },
+          { range: [60, 100], color: 'rgba(231, 76, 60, 0.18)' },
+        ],
+      },
+    }], {
+      height: 140, margin: { l: 18, r: 18, t: 10, b: 5 },
+      font: { family: 'Inter' }, paper_bgcolor: 'rgba(0,0,0,0)',
+    }, { displayModeBar: false, responsive: true });
+  }, [umkm, isHR]);
+
+  return (
+    <div className="content">
+      <div className="page-header">
+        <div className="page-eyebrow">Analisis Mendalam · {horizonLabel} ke depan</div>
+        <h1 className="page-title">{umkm.nama}</h1>
+        <p className="page-sub">Telusuri faktor-faktor yang mempengaruhi prediksi usaha Anda.</p>
+      </div>
+
+      <div style={{display: 'flex', gap: 10, alignItems: 'center', marginBottom: 18, flexWrap: 'wrap'}}>
+        <label className="field-label" style={{margin: 0, minWidth: 100}}>Pilih usaha:</label>
+        <select className="select" value={umkm.id} onChange={(e) => setSelectedUMKM(e.target.value)} style={{maxWidth: 420}}>
+          {umkmList.map(u => (
+            <option key={u.id} value={u.id}>
+              {u.nama} — {u.prob >= tau ? `Berisiko (${(u.prob*100).toFixed(0)}%)` : `Aman (${(u.prob*100).toFixed(0)}%)`}
+            </option>
+          ))}
+        </select>
+        <button className="btn btn-ghost" onClick={() => setPage('hasil')}>← Kembali ke Laporan</button>
+      </div>
+
+      {/* Profile header */}
+      <div className="detail-header" style={{marginBottom: 18}}>
+        <div>
+          <div className="detail-label">Usaha</div>
+          <div className="detail-id-name">
+            <div className="detail-value-lg" style={{fontSize: 18, lineHeight: 1.25}}>{umkm.nama}</div>
+            <span className="small">{umkm.sektor}</span>
+            <span className="mono" style={{fontSize: 11, color: 'var(--ink-4)', marginTop: 2}}>
+              Kode: {umkm.id}
+            </span>
+          </div>
+        </div>
+        <div>
+          <div className="detail-label">Status Prediksi</div>
+          <div style={{marginTop: 8}}>
+            <span className={`badge ${isHR ? 'badge-risk' : 'badge-safe'}`} style={{fontSize: 13, padding: '5px 14px'}}>
+              <span className="dotmark"></span>
+              {isHR ? 'BERISIKO' : 'AMAN'}
+            </span>
+          </div>
+          <div style={{fontSize: 11.5, color: 'var(--ink-3)', marginTop: 8}}>
+            Untuk {horizonLabel} ke depan
+          </div>
+        </div>
+        <div>
+          <div className="detail-label">Skor Risiko</div>
+          <div ref={gaugeRef}></div>
+        </div>
+        <div>
+          <div className="detail-label">Kondisi Terakhir</div>
+          <div style={{display: 'flex', flexDirection: 'column', gap: 2, marginTop: 8}}>
+            <div className="kv">
+              <span className="k">Kesehatan kas</span>
+              <span className="v" style={{color: cashHealthColor}}>{cashHealthLabel}</span>
+            </div>
+            <div className="kv">
+              <span className="k">Tren 4 minggu</span>
+              <span className="v" style={{color: trendColor}}>{trendIcon} {trendLabel}</span>
+            </div>
+            <div className="kv">
+              <span className="k">Riwayat data</span>
+              <span className="v mono">{umkm.weeks} mgg</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Time series */}
+      <div className="card" style={{marginBottom: 18}}>
+        <div className="card-title">📈 Perjalanan Kesehatan Kas Anda</div>
+        <div className="card-sub">
+          Grafik perminggu dari riwayat ke prediksi. <strong>Hijau muda</strong> = zona aman,
+          <strong> kuning</strong> = sedang, <strong>merah muda</strong> = waspada.
+          Belah ketupat di kanan adalah prediksi untuk {horizonLabel} ke depan.
+        </div>
+        <div ref={tsRef}></div>
+      </div>
+
+      {/* Faktor yang mempengaruhi prediksi */}
+      <div className="card" style={{marginBottom: 18}}>
+        <div className="card-title">🧭 Faktor yang Mempengaruhi Prediksi</div>
+        <div className="card-sub">
+          Ini hal-hal yang membuat sistem sampai pada kesimpulan tersebut. Disusun dari yang paling berpengaruh.
+        </div>
+        <div style={{display: 'flex', flexDirection: 'column', gap: 10, marginTop: 14}}>
+          {factors.map((f, i) => (
+            <FactorRow key={i} f={f} />
+          ))}
+        </div>
+      </div>
+
+      {/* Interpretasi narasi */}
+      <div className="card" style={{marginBottom: 18}}>
+        <div className="card-title">📝 Ringkasan dalam Bahasa Sehari-hari</div>
+        {isHR ? (
+          <div className="alert alert-error" style={{marginTop: 12}}>
+            <span className="alert-icon">⚠️</span>
+            <div>
+              <div className="alert-title">Sistem melihat tanda-tanda risiko</div>
+              Berdasarkan pola transaksi <strong>{umkm.nama}</strong> selama {umkm.weeks} minggu terakhir,
+              sistem memperkirakan ada kemungkinan <strong>{(umkm.prob*100).toFixed(0)}%</strong> usaha Anda
+              akan mengalami kesulitan arus kas dalam <strong>{horizonLabel} ke depan</strong>.
+              Pola seperti ini pernah ditemui pada usaha-usaha yang kemudian benar-benar kesulitan.
+              Lihat saran tindakan di halaman <strong>Laporan Saya</strong>.
+            </div>
+          </div>
+        ) : (
+          <div className="alert alert-success" style={{marginTop: 12}}>
+            <span className="alert-icon">✅</span>
+            <div>
+              <div className="alert-title">Sistem tidak melihat tanda risiko</div>
+              Berdasarkan pola transaksi <strong>{umkm.nama}</strong> selama {umkm.weeks} minggu terakhir,
+              sistem hanya melihat <strong>{(umkm.prob*100).toFixed(0)}%</strong> kemungkinan masalah dalam
+              <strong> {horizonLabel} ke depan</strong>. Rasio arus kas Anda{' '}
+              {umkm.clrLast > qs.q75 ? 'berada di zona aman' : 'cukup memadai'} dan trennya{' '}
+              {umkm.tren === 'up' ? 'membaik' : umkm.tren === 'flat' ? 'stabil' : 'sedikit menurun tetapi belum mengkhawatirkan'}.
+            </div>
+          </div>
+        )}
+
+        <div style={{marginTop: 14, padding: 14, background: 'var(--canvas)', borderRadius: 8, fontSize: 12, color: 'var(--ink-3)', lineHeight: 1.65}}>
+          <strong style={{color: 'var(--ink-2)'}}>Cara membaca:</strong> Prediksi ini adalah perkiraan berdasarkan
+          pola data Anda dibandingkan ribuan usaha lain. Bukan jaminan, tapi sinyal untuk membantu Anda
+          mengambil keputusan lebih cepat. Tetap gunakan akal sehat dan konsultasi dengan orang yang
+          memahami keuangan usaha Anda untuk keputusan besar.
+        </div>
+      </div>
+
+      <div className="disclaimer">
+        <strong>⚠️ Catatan:</strong> Analisis ini bersifat indikatif. Sistem tidak menggantikan
+        keputusan manusia — gunakan sebagai pendukung, bukan satu-satunya sumber.
+      </div>
+    </div>
+  );
+};
+
+// Plain-language factor row
+const FactorRow = ({ f }) => {
+  const toneColor = { hr: 'var(--hr)', safe: 'var(--safe)', warn: 'var(--warn)', neutral: 'var(--ink-3)' }[f.tone];
+  const toneBg   = { hr: 'var(--hr-bg)', safe: 'var(--safe-bg)', warn: 'var(--warn-bg)', neutral: 'var(--canvas)' }[f.tone];
+  return (
+    <div style={{
+      display: 'flex', gap: 14, alignItems: 'flex-start',
+      padding: '14px 16px',
+      background: toneBg,
+      border: `1px solid ${f.tone === 'neutral' ? 'var(--line)' : toneColor + '40'}`,
+      borderRadius: 'var(--r-md)',
+    }}>
+      <div style={{fontSize: 22, lineHeight: 1, flexShrink: 0}}>{f.icon}</div>
+      <div style={{flex: 1, minWidth: 0}}>
+        <div style={{fontSize: 13, fontWeight: 700, color: 'var(--ink)', marginBottom: 4}}>
+          {f.title}
+        </div>
+        <div style={{fontSize: 12.5, color: 'var(--ink-2)', lineHeight: 1.6}}>
+          {f.detail}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+window.DetailPage = DetailPage;
+
+  </script>
+  <script type="text/babel" data-presets="react">
+// Tentang Sistem — friendly info + collapsible technical detail for thesis evaluation
+const ResearchPage = ({ trackA, trackB, bestTrackAPerH, bestTrackBPerH, macroAblation, macroCorr }) => {
+  const [showTech, setShowTech] = React.useState(false);
+
+  const accuracyCards = [
+    {
+      horizon: 4, label: '1 bulan ke depan',
+      accuracy: 73, vibe: 'Paling akurat', tone: 'safe',
+      note: 'Pilihan terbaik untuk pemantauan rutin.',
+    },
+    {
+      horizon: 12, label: '3 bulan ke depan',
+      accuracy: 72, vibe: 'Cukup akurat', tone: 'safe',
+      note: 'Cocok untuk perencanaan kuartalan.',
+    },
+    {
+      horizon: 24, label: '6 bulan ke depan',
+      accuracy: 67, vibe: 'Indikatif', tone: 'warn',
+      note: 'Berguna sebagai arah, bukan kepastian.',
+    },
+  ];
+
+  const trustItems = [
+    {
+      icon: '🧠',
+      title: 'Dilatih dari ribuan pola usaha nyata',
+      desc: 'Sistem belajar dari catatan transaksi UMKM selama lebih dari 2 tahun (Januari 2023 sampai Februari 2025), kemudian diuji ulang pada data yang belum pernah dilihat sebelumnya.',
+    },
+    {
+      icon: '🌐',
+      title: 'Sudah memperhitungkan ekonomi nasional',
+      desc: 'Inflasi, suku bunga Bank Indonesia, dan nilai tukar rupiah selalu otomatis ikut dalam perhitungan — Anda tidak perlu mengerti angka-angka itu.',
+    },
+    {
+      icon: '🔒',
+      title: 'Data Anda tidak pernah dibagikan',
+      desc: 'File yang Anda unggah hanya diproses di komputer Anda sendiri. Sistem tidak menyimpan atau mengirim data Anda ke pihak mana pun.',
+    },
+    {
+      icon: '⚖️',
+      title: 'Pengaturan terbaik sudah disetel otomatis',
+      desc: 'Tingkat kepekaan peringatan sudah dipilih berdasarkan ribuan percobaan — menyeimbangkan antara ketepatan, cakupan, dan jumlah peringatan keliru.',
+    },
+  ];
+
+  const limitations = [
+    'Bukan keputusan keuangan resmi — hasilnya indikatif, bukan vonis.',
+    'Bergantung pada kualitas data Anda — semakin rapi catatan, semakin tajam prediksi.',
+    'Tidak memprediksi kejadian luar biasa seperti bencana, perubahan regulasi mendadak, atau hal personal pemilik usaha.',
+    'Performa di luar periode pelatihan (Januari 2023 – Februari 2025) belum dapat dipastikan.',
+  ];
+
+  return (
+    <div className="content">
+      <div className="page-header">
+        <div className="page-eyebrow">Tentang Sistem</div>
+        <h1 className="page-title">Bagaimana Sistem Ini Bekerja & Sebaik Apa</h1>
+        <p className="page-sub">
+          Penjelasan singkat agar Anda bisa percaya sekaligus tahu batasannya.
+        </p>
+      </div>
+
+      {/* Akurasi cards */}
+      <h2 style={{
+        fontSize: 16, fontWeight: 700, color: 'var(--ink)',
+        margin: '8px 0 14px', display: 'flex', alignItems: 'center', gap: 8,
+      }}>
+        <span style={{
+          width: 22, height: 22, background: 'var(--primary)', color: 'white',
+          borderRadius: 6, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 11, fontWeight: 700,
+        }}>1</span>
+        Seberapa Akurat Sistem Ini?
+      </h2>
+
+      <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 12}}>
+        {accuracyCards.map(c => (
+          <div key={c.horizon} style={{
+            background: 'white', border: '1px solid var(--line)',
+            borderRadius: 'var(--r-lg)', padding: '20px 22px', position: 'relative', overflow: 'hidden',
+          }}>
+            <div style={{
+              position: 'absolute', left: 0, top: 0, bottom: 0, width: 4,
+              background: c.tone === 'safe' ? 'var(--safe)' : 'var(--warn)',
+            }}/>
+            <div style={{fontSize: 12, fontWeight: 600, color: 'var(--ink-3)', letterSpacing: '0.04em', textTransform: 'uppercase'}}>
+              Prediksi {c.label}
+            </div>
+            <div style={{
+              fontSize: 42, fontWeight: 700, color: 'var(--ink)',
+              letterSpacing: '-0.02em', lineHeight: 1.1, marginTop: 6,
+              fontVariantNumeric: 'tabular-nums',
+            }}>
+              {c.accuracy}<span style={{fontSize: 20, color: 'var(--ink-3)'}}>%</span>
+            </div>
+            <div style={{
+              fontSize: 12, fontWeight: 600, marginTop: 4,
+              color: c.tone === 'safe' ? 'var(--safe)' : 'var(--warn)',
+            }}>{c.vibe}</div>
+            <div style={{fontSize: 12, color: 'var(--ink-3)', marginTop: 8, lineHeight: 1.5}}>
+              {c.note}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="alert alert-info" style={{marginBottom: 28}}>
+        <span className="alert-icon">💡</span>
+        <div>
+          <div className="alert-title">Apa artinya angka ini?</div>
+          Jika dikatakan akurasi <strong>73%</strong>, artinya dari 100 usaha yang diprediksi sistem,
+          kurang lebih 73 sesuai dengan kenyataannya. Tidak ada sistem yang 100% — gunakan prediksi
+          sebagai pendukung, bukan satu-satunya alat.
+        </div>
+      </div>
+
+      {/* Why trust it */}
+      <h2 style={{
+        fontSize: 16, fontWeight: 700, color: 'var(--ink)',
+        margin: '8px 0 14px', display: 'flex', alignItems: 'center', gap: 8,
+      }}>
+        <span style={{
+          width: 22, height: 22, background: 'var(--primary)', color: 'white',
+          borderRadius: 6, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 11, fontWeight: 700,
+        }}>2</span>
+        Mengapa Bisa Dipercaya?
+      </h2>
+
+      <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 28}}>
+        {trustItems.map((t, i) => (
+          <div key={i} style={{
+            background: 'white', border: '1px solid var(--line)',
+            borderRadius: 'var(--r-lg)', padding: '18px 20px',
+          }}>
+            <div style={{fontSize: 24, marginBottom: 8}}>{t.icon}</div>
+            <div style={{fontSize: 14, fontWeight: 700, color: 'var(--ink)', marginBottom: 6}}>
+              {t.title}
+            </div>
+            <div style={{fontSize: 12.5, color: 'var(--ink-3)', lineHeight: 1.6}}>
+              {t.desc}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Limitations */}
+      <h2 style={{
+        fontSize: 16, fontWeight: 700, color: 'var(--ink)',
+        margin: '8px 0 14px', display: 'flex', alignItems: 'center', gap: 8,
+      }}>
+        <span style={{
+          width: 22, height: 22, background: 'var(--primary)', color: 'white',
+          borderRadius: 6, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 11, fontWeight: 700,
+        }}>3</span>
+        Yang Sistem <em>Tidak</em> Bisa Lakukan
+      </h2>
+
+      <div className="card" style={{marginBottom: 28}}>
+        <div className="card-sub" style={{marginBottom: 14}}>
+          Penting agar Anda tidak kecewa atau salah memakai.
+        </div>
+        <ul style={{margin: 0, paddingLeft: 22, fontSize: 13, color: 'var(--ink-2)', lineHeight: 1.85}}>
+          {limitations.map((l, i) => <li key={i}>{l}</li>)}
+        </ul>
+      </div>
+
+      {/* Collapsible technical detail */}
+      <div style={{
+        background: 'white', border: '1px dashed var(--line-2)',
+        borderRadius: 'var(--r-lg)', overflow: 'hidden',
+      }}>
+        <div
+          onClick={() => setShowTech(!showTech)}
+          style={{
+            padding: '14px 18px', cursor: 'pointer',
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            background: showTech ? 'var(--canvas)' : 'transparent',
+            transition: 'background .15s',
+          }}
+        >
+          <div>
+            <div style={{fontSize: 14, fontWeight: 700, color: 'var(--ink)'}}>
+              🔬 Detail Teknis untuk Peneliti & Pembimbing
+            </div>
+            <div style={{fontSize: 11.5, color: 'var(--ink-3)', marginTop: 2}}>
+              Benchmark antar-model, ablasi makroekonomi, korelasi Pearson. Tidak perlu dibuka untuk penggunaan biasa.
+            </div>
+          </div>
+          <span style={{fontSize: 12, color: 'var(--ink-3)', fontWeight: 600}}>
+            {showTech ? '▼ Sembunyikan' : '▶ Tampilkan'}
+          </span>
+        </div>
+        {showTech && (
+          <div style={{padding: '4px 18px 20px', borderTop: '1px solid var(--line)'}}>
+            <TechDetail
+              trackA={trackA} trackB={trackB}
+              bestTrackAPerH={bestTrackAPerH} bestTrackBPerH={bestTrackBPerH}
+              macroAblation={macroAblation} macroCorr={macroCorr}
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="disclaimer">
+        <strong>⚠️ Catatan:</strong> Prototipe Tugas Akhir STI ITB 2025. Sistem ini adalah bukti konsep
+        akademik dan tidak dimaksudkan untuk pengambilan keputusan keuangan resmi.
+      </div>
+    </div>
+  );
+};
+
+// ============================================================
+// Technical detail (collapsed by default) — original benchmark content
+// ============================================================
+const TechDetail = ({ trackA, trackB, bestTrackAPerH, bestTrackBPerH, macroAblation, macroCorr }) => {
+  const [tab, setTab] = React.useState('compare');
+  const [horizon, setHorizon] = React.useState(4);
+  return (
+    <div style={{paddingTop: 14}}>
+      <div className="tabs">
+        <div className={`tab ${tab === 'compare' ? 'active' : ''}`} onClick={() => setTab('compare')}>1. Perbandingan Antar-Model</div>
+        <div className={`tab ${tab === 'track' ? 'active' : ''}`} onClick={() => setTab('track')}>2. Track A vs Track B</div>
+        <div className={`tab ${tab === 'macro' ? 'active' : ''}`} onClick={() => setTab('macro')}>3. Studi Ablasi Makro</div>
+      </div>
+      {tab === 'compare' && <CompareTab trackA={trackA} trackB={trackB} bestTrackAPerH={bestTrackAPerH} bestTrackBPerH={bestTrackBPerH} horizon={horizon} setHorizon={setHorizon} />}
+      {tab === 'track' && <TrackTab trackA={trackA} trackB={trackB} horizon={horizon} setHorizon={setHorizon} />}
+      {tab === 'macro' && <MacroTab macroAblation={macroAblation} macroCorr={macroCorr} />}
+    </div>
+  );
+};
+
+// ───── Tab 1: Compare models ─────
+const CompareTab = ({ trackA, trackB, bestTrackAPerH, bestTrackBPerH, horizon, setHorizon }) => {
+  const chartARef = React.useRef(null);
+  const chartBRef = React.useRef(null);
+
+  const modelsA = ['Extra Trees', 'XGBoost', 'LightGBM', 'Stacking'];
+  const modelsB = ['Extra Trees', 'XGBoost', 'LightGBM', 'SoftVoting'];
+  const metrics = ['MacroF1', 'F1_HR', 'Prec_HR', 'Rec_HR', 'AUC'];
+  const metricLabels = { MacroF1: 'Macro F1', F1_HR: 'F1-HR', Prec_HR: 'Prec-HR', Rec_HR: 'Rec-HR', AUC: 'AUC' };
+
+  const drawGrouped = (ref, data, models, bestModel) => {
+    const traces = models.map((m) => ({
+      type: 'bar', name: m,
+      x: metrics.map(k => metricLabels[k]),
+      y: metrics.map(k => data[horizon][m][k]),
+      marker: {
+        color: m === bestModel ? '#2C3E50' : ['#BDC3C7', '#85929E', '#5D6D7E', '#34495E'][models.indexOf(m)],
+        line: m === bestModel ? { color: '#F1C40F', width: 2.5 } : { width: 0 },
+      },
+      text: metrics.map(k => data[horizon][m][k].toFixed(3)),
+      textposition: 'outside',
+      textfont: { size: 9, color: '#5D6D7E', family: 'JetBrains Mono' },
+    }));
+
+    Plotly.react(ref.current, traces, {
+      template: 'plotly_white', barmode: 'group',
+      yaxis: { range: [0, 1.0], gridcolor: '#ECF0F1', tickformat: '.2f' },
+      xaxis: { tickfont: { size: 11, family: 'Inter' } },
+      legend: { orientation: 'h', y: -0.18, font: { family: 'Inter', size: 11 } },
+      margin: { l: 50, r: 30, t: 30, b: 60 },
+      height: 320, font: { family: 'Inter' },
+      paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+    }, { displayModeBar: false, responsive: true });
+  };
+
+  React.useEffect(() => {
+    drawGrouped(chartARef, trackA, modelsA, bestTrackAPerH[horizon]);
+    drawGrouped(chartBRef, trackB, modelsB, bestTrackBPerH[horizon]);
+  }, [horizon]);
+
+  return (
+    <div>
+      <div style={{display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16}}>
+        <span style={{fontSize: 12.5, color: 'var(--ink-3)', fontWeight: 600}}>Horizon:</span>
+        {[4, 12, 24].map(h => (
+          <div key={h} className={`chip ${horizon === h ? 'active' : ''}`} onClick={() => setHorizon(h)}>H = {h} minggu</div>
+        ))}
+      </div>
+
+      <div className="grid-2">
+        <div className="card">
+          <div className="card-title">Track A — Klasifikasi 3-Kelas</div>
+          <div className="card-sub">Terbaik H={horizon}: <strong>{bestTrackAPerH[horizon]}</strong></div>
+          <div ref={chartARef}></div>
+          <div className="table-wrap" style={{marginTop: 14}}>
+            <table className="data">
+              <thead>
+                <tr><th>Model</th>{metrics.map(m => <th key={m} style={{textAlign:'right'}}>{metricLabels[m]}</th>)}</tr>
+              </thead>
+              <tbody>
+                {modelsA.map(m => (
+                  <tr key={m} style={m === bestTrackAPerH[horizon] ? { background: 'rgba(241, 196, 15, 0.1)' } : {}}>
+                    <td style={{fontWeight: m === bestTrackAPerH[horizon] ? 700 : 500}}>
+                      {m === bestTrackAPerH[horizon] && '🏆 '}{m}
+                    </td>
+                    {metrics.map(k => (
+                      <td key={k} className="mono" style={{textAlign: 'right', fontWeight: m === bestTrackAPerH[horizon] ? 700 : 400}}>
+                        {trackA[horizon][m][k].toFixed(3)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-title">Track B — Klasifikasi Binary</div>
+          <div className="card-sub">Terbaik H={horizon}: <strong>{bestTrackBPerH[horizon]}</strong></div>
+          <div ref={chartBRef}></div>
+          <div className="table-wrap" style={{marginTop: 14}}>
+            <table className="data">
+              <thead>
+                <tr><th>Model</th>{metrics.map(m => <th key={m} style={{textAlign:'right'}}>{metricLabels[m]}</th>)}</tr>
+              </thead>
+              <tbody>
+                {modelsB.map(m => (
+                  <tr key={m} style={m === bestTrackBPerH[horizon] ? { background: 'rgba(241, 196, 15, 0.1)' } : {}}>
+                    <td style={{fontWeight: m === bestTrackBPerH[horizon] ? 700 : 500}}>
+                      {m === bestTrackBPerH[horizon] && '🏆 '}{m}
+                    </td>
+                    {metrics.map(k => (
+                      <td key={k} className="mono" style={{textAlign: 'right', fontWeight: m === bestTrackBPerH[horizon] ? 700 : 400}}>
+                        {trackB[horizon][m][k].toFixed(3)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ───── Tab 2: Track A vs Track B ─────
+const TrackTab = ({ trackA, trackB, horizon, setHorizon }) => {
+  const radarRef = React.useRef(null);
+  const a = trackA[horizon].Stacking;
+  const b = trackB[horizon][horizon === 24 ? 'LightGBM' : 'SoftVoting'];
+
+  React.useEffect(() => {
+    if (!radarRef.current) return;
+    const metrics = ['Macro F1', 'F1-HR', 'Prec-HR', 'Rec-HR', 'AUC'];
+    const aValues = [a.MacroF1, a.F1_HR, a.Prec_HR, a.Rec_HR, a.AUC];
+    const bValues = [b.MacroF1, b.F1_HR, b.Prec_HR, b.Rec_HR, b.AUC];
+
+    Plotly.react(radarRef.current, [
+      { type: 'scatterpolar', r: [...aValues, aValues[0]], theta: [...metrics, metrics[0]],
+        fill: 'toself', name: 'Track A · Stacking',
+        line: { color: '#E74C3C', width: 2 }, fillcolor: 'rgba(231, 76, 60, 0.15)',
+        marker: { size: 6 } },
+      { type: 'scatterpolar', r: [...bValues, bValues[0]], theta: [...metrics, metrics[0]],
+        fill: 'toself', name: `Track B · ${horizon === 24 ? 'LightGBM' : 'SoftVoting'}`,
+        line: { color: '#3498DB', width: 2 }, fillcolor: 'rgba(52, 152, 219, 0.18)',
+        marker: { size: 6 } },
+    ], {
+      polar: {
+        radialaxis: { visible: true, range: [0.4, 0.9], gridcolor: '#ECF0F1', tickfont: { size: 10 } },
+        angularaxis: { tickfont: { size: 11.5, family: 'Inter', color: '#34495E' } },
+        bgcolor: 'rgba(0,0,0,0)',
+      },
+      legend: { orientation: 'h', y: -0.1, font: { family: 'Inter', size: 12 } },
+      margin: { l: 50, r: 50, t: 30, b: 60 },
+      height: 380, font: { family: 'Inter' },
+      paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+    }, { displayModeBar: false, responsive: true });
+  }, [horizon, a, b]);
+
+  const metricRows = [
+    { key: 'MacroF1', label: 'Macro F1' },
+    { key: 'Rec_HR',  label: 'Recall HIGH_RISK' },
+    { key: 'Prec_HR', label: 'Precision HIGH_RISK' },
+    { key: 'F1_HR',   label: 'F1 HIGH_RISK' },
+    { key: 'AUC',     label: 'ROC AUC' },
+  ];
+
+  return (
+    <div>
+      <div style={{display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16}}>
+        <span style={{fontSize: 12.5, color: 'var(--ink-3)', fontWeight: 600}}>Horizon:</span>
+        {[4, 12, 24].map(h => (
+          <div key={h} className={`chip ${horizon === h ? 'active' : ''}`} onClick={() => setHorizon(h)}>H = {h} minggu</div>
+        ))}
+      </div>
+
+      <div style={{display: 'grid', gridTemplateColumns: '0.9fr 1.1fr', gap: 16}}>
+        <div className="card">
+          <div className="card-title">Radar Chart · 5 dimensi metrik</div>
+          <div className="card-sub">Visualisasi perbandingan Track A vs Track B pada H={horizon}.</div>
+          <div ref={radarRef}></div>
+        </div>
+
+        <div className="card">
+          <div className="card-title">Selisih Metrik · Track A → Track B</div>
+          <div className="card-sub">Persentase poin perbedaan; positif berarti Track B unggul.</div>
+          <div style={{display: 'flex', flexDirection: 'column', gap: 10, marginTop: 8}}>
+            {metricRows.map(row => {
+              const av = a[row.key], bv = b[row.key];
+              const delta = (bv - av) * 100;
+              return (
+                <div key={row.key} style={{display: 'flex', alignItems: 'center', padding: '12px 14px', background: 'var(--canvas)', borderRadius: 10, gap: 14}}>
+                  <div style={{flex: 1}}>
+                    <div style={{fontSize: 12, color: 'var(--ink-3)', fontWeight: 600}}>{row.label}</div>
+                    <div className="mono" style={{fontSize: 14, marginTop: 2}}>
+                      <span style={{color: 'var(--hr)'}}>{av.toFixed(3)}</span>
+                      &nbsp;→&nbsp;
+                      <span style={{color: 'var(--accent)'}}>{bv.toFixed(3)}</span>
+                    </div>
+                  </div>
+                  <div style={{fontFamily: 'JetBrains Mono', fontSize: 18, fontWeight: 700,
+                               color: delta > 0 ? 'var(--safe)' : 'var(--hr)'}}>
+                    {delta > 0 ? '+' : ''}{delta.toFixed(1)} <span style={{fontSize: 10, color: 'var(--ink-4)'}}>pp</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ───── Tab 3: Macro Ablation ─────
+const MacroTab = ({ macroAblation, macroCorr }) => {
+  const ablRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (!ablRef.current) return;
+    Plotly.react(ablRef.current, [{
+      type: 'bar',
+      x: macroAblation.map(d => `H = ${d.H}`),
+      y: macroAblation.map(d => d.delta),
+      marker: { color: macroAblation.map(d => d.H === 12 ? '#27AE60' : '#85C1A2') },
+      text: macroAblation.map(d => `+${(d.delta*100).toFixed(2)}%`),
+      textposition: 'outside',
+      textfont: { size: 12, color: '#196F3D', family: 'JetBrains Mono' },
+      width: 0.5,
+      hovertemplate: '<b>%{x}</b><br>ΔF1 = %{y:.4f}<extra></extra>',
+    }], {
+      template: 'plotly_white',
+      yaxis: {
+        title: { text: 'Δ Macro F1 (full vs no-macro)', font: { size: 11, color: '#5D6D7E' } },
+        gridcolor: '#ECF0F1', range: [-0.005, 0.04],
+        zeroline: true, zerolinecolor: '#5D6D7E', zerolinewidth: 1.5,
+      },
+      xaxis: { tickfont: { size: 13, family: 'Inter' } },
+      margin: { l: 60, r: 30, t: 30, b: 50 },
+      height: 320, font: { family: 'Inter' },
+      paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+    }, { displayModeBar: false, responsive: true });
+  }, [macroAblation]);
+
+  return (
+    <div>
+      <div className="grid-2">
+        <div className="card">
+          <div className="card-title">ΔMacro F1 · Full Model vs Tanpa Makroekonomi</div>
+          <div className="card-sub">Eksperimen dengan menghilangkan 3 fitur makro lag-1 dan 2 fitur interaksi.</div>
+          <div ref={ablRef}></div>
+        </div>
+
+        <div className="card">
+          <div className="card-title">Korelasi Pearson dengan CLR</div>
+          <div className="card-sub">Analisis bivariat per variabel makro.</div>
+          <div className="table-wrap" style={{marginTop: 12}}>
+            <table className="data">
+              <thead>
+                <tr><th>Variabel</th><th>Pearson r</th><th>p-value</th><th>Interpretasi</th></tr>
+              </thead>
+              <tbody>
+                {macroCorr.map(row => (
+                  <tr key={row.v}>
+                    <td>{row.v}</td>
+                    <td className="mono" style={{color: 'var(--hr)', fontWeight: 600}}>{row.r.toFixed(2)}</td>
+                    <td className="mono">{row.p}</td>
+                    <td style={{fontSize: 12, color: 'var(--ink-3)'}}>{row.note}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+window.ResearchPage = ResearchPage;
+
+  </script>
+  <script type="text/babel" data-presets="react">
+// Root app — handles navigation + global state
+const App = () => {
+  const [page, setPage] = React.useState('landing');
+  const [predictionDone, setPredictionDone] = React.useState(false);
+  const [prediction, setPrediction] = React.useState({ horizon: 4, tau: 0.42 });
+  const [submittedUMKM, setSubmittedUMKM] = React.useState(null);
+  const [selectedUMKM, setSelectedUMKM] = React.useState(null);
+
+  const M = window.MOCK;
+
+  // umkmList = submitted UMKM (if any) prepended to historical peer dataset
+  const effectiveList = React.useMemo(() => {
+    if (!submittedUMKM) return M.umkmList;
+    // Replace if same ID already exists, else prepend
+    const without = M.umkmList.filter(u => u.id !== submittedUMKM.id);
+    return [submittedUMKM, ...without];
+  }, [submittedUMKM, M.umkmList]);
+
+  const handlePredict = ({ horizon, tau, submittedUMKM: u }) => {
+    setPrediction({ horizon, tau });
+    if (u) {
+      setSubmittedUMKM(u);
+      setSelectedUMKM(u.id);
+    }
+    setPredictionDone(true);
+  };
+
+  return (
+    <div className="app" data-screen-label={`${page}`}>
+      <Sidebar
+        currentPage={page}
+        setPage={setPage}
+        thresholds={M.thresholds}
+      />
+      {page === 'landing' && (
+        <LandingPage
+          setPage={setPage}
+          thresholds={M.thresholds}
+          horizonStats={M.horizonStats}
+        />
+      )}
+      {page === 'input' && (
+        <InputPage
+          setPage={setPage}
+          thresholds={M.thresholds}
+          horizonStats={M.horizonStats}
+          onPredict={handlePredict}
+          predictionDone={predictionDone}
+        />
+      )}
+      {page === 'hasil' && (
+        <ResultsPage
+          setPage={setPage}
+          predictionDone={predictionDone}
+          prediction={prediction}
+          submittedUMKM={submittedUMKM}
+          umkmList={effectiveList}
+          peerList={M.umkmList}
+          thresholds={M.thresholds}
+          q25q75={M.q25q75}
+          setSelectedUMKM={setSelectedUMKM}
+        />
+      )}
+      {page === 'detail' && (
+        <DetailPage
+          setPage={setPage}
+          predictionDone={predictionDone}
+          prediction={prediction}
+          submittedUMKM={submittedUMKM}
+          umkmList={effectiveList}
+          selectedUMKM={selectedUMKM || (submittedUMKM ? submittedUMKM.id : effectiveList[0].id)}
+          setSelectedUMKM={setSelectedUMKM}
+          topFeaturesH4={M.topFeaturesH4}
+          featureValuesFor={M.featureValuesFor}
+          q25q75={M.q25q75}
+        />
+      )}
+      {page === 'riset' && (
+        <ResearchPage
+          trackA={M.trackA}
+          trackB={M.trackB}
+          bestTrackAPerH={M.bestTrackAPerH}
+          bestTrackBPerH={M.bestTrackBPerH}
+          macroAblation={M.macroAblation}
+          macroCorr={M.macroCorr}
+        />
+      )}
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+  </script>
+</body>
+</html>
