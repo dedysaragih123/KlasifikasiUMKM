@@ -6,26 +6,30 @@ Aplikasi ini sepenuhnya **static HTML** (React + Babel + Plotly di-load via CDN)
 
 ---
 
-## 🚀 Deploy ke GitHub Pages (5 menit)
+## 🚀 Deployment (Automated with GitHub Pages + Actions)
 
-1. **Buat repository baru** di [github.com/new](https://github.com/new) — beri nama bebas (cth: `cek-kesehatan-kas`).
-2. **Upload semua file** project ini ke repo:
-   - Klik **Add file → Upload files**
-   - Drag-and-drop seluruh isi folder (atau klik "choose your files" dan pilih semuanya)
-   - Tulis commit message, klik **Commit changes**
-3. **Aktifkan GitHub Pages**:
-   - Buka **Settings** → menu kiri **Pages**
-   - Bagian **Source**, pilih branch `main` dan folder `/ (root)`
-   - Klik **Save**
-4. **Tunggu ~1 menit**, situs akan live di:
-   ```
-   https://<username-github>.github.io/<nama-repo>/
-   ```
-   Misal: `https://dedyhofmanindo.github.io/cek-kesehatan-kas/`
+**Status:** ✅ Already configured and live!
 
-GitHub akan menampilkan URL final di bagian atas halaman Pages setelah deploy selesai (icon ✅ hijau).
+Repository ini sudah siap deploy dengan GitHub Actions automation:
+- Setiap kali ada `push` ke branch `main`, GitHub Actions otomatis mem-build dan men-deploy ke GitHub Pages
+- Tidak perlu manual trigger — deployment berjalan in-background
 
-> ⚠️ Catatan: koneksi internet tetap diperlukan saat membuka situs — React, Babel, dan Plotly dimuat dari CDN (unpkg & cdn.plot.ly). Bila ingin sepenuhnya offline, gunakan fitur "Save as standalone HTML" untuk men-bundle semua dependensi ke 1 file.
+**URL deployment:**
+```
+https://dedysaragih123.github.io/KlasifikasiUMKM/
+```
+
+**Cara kerja:**
+1. Edit file (`.jsx` atau `index.html`)
+2. Commit & push ke branch `main`
+3. GitHub Actions (workflow `.github/workflows/deploy.yml`) otomatis menjalankan deploy
+4. Tunggu ~2-5 menit, situs akan ter-update otomatis
+
+**Monitoring deployment:**
+- Buka tab **Actions** di repo GitHub
+- Lihat status workflow terbaru — icon ✅ = deploy berhasil, ❌ = ada error
+
+> ⚠️ **Catatan:** Koneksi internet tetap diperlukan saat membuka situs — React, Babel, dan Plotly dimuat dari CDN (unpkg & cdn.plot.ly). Bila ingin sepenuhnya offline, bundle semua dependensi ke 1 file HTML standalone.
 
 ---
 
